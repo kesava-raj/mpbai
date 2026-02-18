@@ -1,15 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-jakarta",
 });
 
 export const metadata: Metadata = {
@@ -23,11 +34,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} ${inter.variable} ${jakarta.variable} antialiased bg-background text-foreground font-body`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <main className="min-h-screen flex flex-col pt-16">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -5,9 +5,10 @@ import { Linkedin, Twitter, Github } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer className="bg-muted border-t border-border mt-auto">
-            <div className="container mx-auto px-4 md:px-6 py-12 md:py-16">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
+        <footer className="bg-muted/30 border-t border-border mt-auto relative overflow-hidden">
+            <div className="absolute inset-0 bg-grid-white/[0.02] dark:bg-grid-black/[0.02] -z-10" />
+            <div className="container mx-auto px-4 md:px-6 py-10 md:py-12">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 text-sm">
 
                     <div className="col-span-1 md:col-span-1 space-y-4">
                         <Link href="/" className="flex items-center gap-3">
@@ -23,15 +24,19 @@ export default function Footer() {
                             Building systems that work.
                         </p>
                         <div className="flex gap-4 pt-2">
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                                <Linkedin size={20} />
-                            </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                                <Twitter size={20} />
-                            </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                                <Github size={20} />
-                            </Link>
+                            {[
+                                { Icon: Linkedin, href: "#" },
+                                { Icon: Twitter, href: "#" },
+                                { Icon: Github, href: "#" }
+                            ].map((social, index) => (
+                                <Link
+                                    key={index}
+                                    href={social.href}
+                                    className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-brand-primary-orange hover:border-brand-primary-orange hover:shadow-md hover:shadow-brand-primary-orange/20 transition-all duration-300 group"
+                                >
+                                    <social.Icon size={18} strokeWidth={1.5} className="group-hover:scale-110 transition-transform" />
+                                </Link>
+                            ))}
                         </div>
                     </div>
 

@@ -4,7 +4,8 @@ import * as React from "react";
 import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface ButtonProps extends HTMLMotionProps<"button"> {
+// Explicitly extending React.ButtonHTMLAttributes to ensure standard props are recognized
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Omit<HTMLMotionProps<"button">, keyof React.ButtonHTMLAttributes<HTMLButtonElement>> {
     variant?: "primary" | "secondary" | "outline" | "ghost";
     size?: "sm" | "md" | "lg";
     isLoading?: boolean;
@@ -13,14 +14,14 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ({ className, variant = "primary", size = "md", isLoading, children, ...props }, ref) => {
-        const variants = {
+        const variants: Record<string, string> = {
             primary: "bg-brand-dark-orange text-white hover:bg-brand-primary-orange shadow-sm",
             secondary: "bg-brand-primary-orange text-white hover:bg-brand-secondary-orange shadow-sm",
             outline: "border border-brand-dark-orange text-brand-dark-orange hover:bg-brand-dark-orange/5",
             ghost: "text-gray-700 hover:bg-gray-100",
         };
 
-        const sizes = {
+        const sizes: Record<string, string> = {
             sm: "h-8 px-3 text-sm",
             md: "h-10 px-5 text-base",
             lg: "h-12 px-8 text-lg",
