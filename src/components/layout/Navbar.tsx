@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -28,47 +28,57 @@ export default function Navbar() {
     }, []);
 
     return (
-        <nav
-            className={cn(
-                "fixed top-0 z-50 w-full transition-all duration-300 backdrop-blur-md bg-background/80 border-b",
-                isScrolled ? "py-2 shadow-sm border-border/60" : "py-3 border-transparent bg-transparent"
-            )}
-        >
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2 md:gap-3 group">
-                        <div className="relative h-8 w-8 md:h-9 md:w-9 transition-transform group-hover:scale-110">
+        <>
+            <motion.nav
+                initial={{ y: -100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className={cn(
+                    "fixed top-4 left-0 right-0 z-50 transition-all duration-300 mx-auto",
+                    isScrolled ? "w-[90%] md:w-[80%] lg:w-[70%]" : "w-full px-4 md:px-8"
+                )}
+            >
+                <div
+                    className={cn(
+                        "rounded-full transition-all duration-300 flex items-center justify-between px-6 py-3 border",
+                        isScrolled
+                            ? "bg-background/70 backdrop-blur-xl border-white/20 dark:border-white/10 shadow-lg ring-1 ring-black/5"
+                            : "bg-transparent border-transparent"
+                    )}
+                >
+                    <Link href="/" className="flex items-center gap-2 group">
+                        <div className="relative h-8 w-8 md:h-9 md:w-9 transition-transform group-hover:rotate-12">
                             <img src="/logo.svg" alt="MPBx AI Labs" className="h-full w-full object-contain" />
                         </div>
-                        <span className="text-lg md:text-xl font-bold tracking-tight text-foreground">
+                        <span className="text-lg font-bold tracking-tight text-foreground hidden sm:block">
                             MPBx <span className="text-brand-primary-orange">AI Labs</span>
                         </span>
                     </Link>
 
                     {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-6 lg:gap-8">
+                    <div className="hidden md:flex items-center gap-1 bg-secondary/50 p-1 rounded-full border border-border/50 backdrop-blur-sm">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-brand-primary-orange after:transition-all hover:after:w-full"
+                                className="px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-all hover:bg-background rounded-full"
                             >
                                 {link.name}
                             </Link>
                         ))}
+                    </div>
 
-                        <div className="flex items-center gap-4 pl-4 border-l border-border/40">
-                            <ThemeToggle />
-                            <Link href="/contact">
-                                <Button variant="primary" size="sm" className="shadow-md hover:shadow-lg transition-all">
-                                    Get Started
-                                </Button>
-                            </Link>
-                        </div>
+                    <div className="hidden md:flex items-center gap-3">
+                        <ThemeToggle />
+                        <Link href="/contact">
+                            <Button variant="primary" size="sm" className="rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all px-5">
+                                Get Started
+                            </Button>
+                        </Link>
                     </div>
 
                     {/* Mobile Menu Toggle */}
-                    <div className="flex items-center gap-4 md:hidden">
+                    <div className="flex items-center gap-3 md:hidden">
                         <ThemeToggle />
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -78,39 +88,51 @@ export default function Navbar() {
                         </button>
                     </div>
                 </div>
-            </div>
+            </motion.nav>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-background border-b border-border"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="fixed inset-0 z-40 bg-background/95 backdrop-blur-2xl pt-24 px-6 md:hidden"
                     >
-                        <div className="flex flex-col p-4 space-y-4">
-                            {navLinks.map((link) => (
-                                <Link
+                        <div className="flex flex-col space-y-6">
+                            {navLinks.map((link, i) => (
+                                <motion.div
                                     key={link.name}
-                                    href={link.href}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="text-lg font-medium text-foreground hover:text-primary transition-colors"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: i * 0.1 }}
                                 >
-                                    {link.name}
-                                </Link>
+                                    <Link
+                                        href={link.href}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="flex items-center justify-between text-2xl font-medium text-foreground hover:text-primary transition-colors py-4 border-b border-border/50"
+                                    >
+                                        {link.name}
+                                        <ChevronRight size={20} className="text-muted-foreground" />
+                                    </Link>
+                                </motion.div>
                             ))}
-                            <div className="pt-4 border-t border-border">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="pt-8"
+                            >
                                 <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-                                    <Button variant="primary" className="w-full">
-                                        Get Started
+                                    <Button variant="primary" className="w-full text-lg h-12 rounded-xl">
+                                        Starting a Project?
                                     </Button>
                                 </Link>
-                            </div>
+                            </motion.div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </nav>
+        </>
     );
 }
