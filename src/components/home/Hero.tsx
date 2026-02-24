@@ -120,19 +120,54 @@ export function Hero() {
     };
 
     return (
-        <Section className="relative pt-24 pb-4 md:pt-32 md:pb-8 h-screen flex flex-col overflow-hidden">
+        <Section className="relative h-screen flex flex-col p-0 overflow-hidden bg-background">
 
-            {/* Tech Background */}
-            <div className="absolute inset-0 -z-10 bg-background">
+            {/* Futuristic Tech Background */}
+            <div className="absolute inset-0 -z-10 bg-background overflow-hidden">
+                {/* Standard Grid */}
                 <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]" />
-                <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background/80" />
+
+                {/* Animated Brand Glows */}
+                <motion.div
+                    animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.3, 0.5, 0.3],
+                        x: [0, 50, 0],
+                        y: [0, -30, 0]
+                    }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-brand-primary-orange/20 rounded-full blur-[120px] pointer-events-none"
+                />
+
+                <motion.div
+                    animate={{
+                        scale: [1, 1.1, 1],
+                        opacity: [0.2, 0.4, 0.2],
+                        x: [0, -40, 0],
+                        y: [0, 40, 0]
+                    }}
+                    transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                    className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand-purple/15 rounded-full blur-[100px] pointer-events-none"
+                />
+
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_20%,rgba(0,0,0,0.1)_100%)] dark:bg-[radial-gradient(circle_at_50%_50%,transparent_20%,rgba(0,0,0,0.4)_100%)]" />
+            </div>
+
+            {/* Header / Logo (Floating) */}
+            <div className="pt-8 pb-4 flex flex-col items-center animate-in fade-in slide-in-from-top-4 duration-1000">
+                <div className="flex items-center gap-3">
+                    <img src="/logo.svg" alt="MPBx AI Labs" className="h-10 w-10 md:h-12 md:w-12 drop-shadow-2xl" />
+                    <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground font-jakarta">
+                        MPBx <span className="text-gradient">AI Labs</span>
+                    </h1>
+                </div>
             </div>
 
             {/* Chat Container */}
             <div className="flex-1 container mx-auto px-4 md:px-0 max-w-4xl relative z-10 flex flex-col min-h-0">
 
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto pr-2 md:pr-4 space-y-6 md:space-y-8 pb-32 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                <div className="flex-1 overflow-y-auto pr-2 md:pr-4 space-y-8 pb-40 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                     {messages.map((msg) => (
                         <motion.div
                             key={msg.id}
@@ -144,25 +179,25 @@ export function Hero() {
                             )}
                         >
                             {msg.role === 'assistant' && (
-                                <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                                    <Bot size={18} className="text-primary" />
+                                <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-brand-primary-orange to-brand-red flex items-center justify-center border border-white/20 shadow-lg mt-1">
+                                    <Bot size={18} className="text-white" />
                                 </div>
                             )}
 
                             <div className={cn(
-                                "max-w-[85%] md:max-w-[75%] px-6 py-4 text-sm md:text-base leading-relaxed shadow-sm backdrop-blur-md",
+                                "max-w-[85%] md:max-w-[80%] px-6 py-4 text-sm md:text-lg leading-relaxed shadow-sm transition-all",
                                 msg.role === 'user'
-                                    ? "bg-primary text-primary-foreground rounded-3xl rounded-tr-md"
-                                    : "bg-secondary/30 border border-primary/20 text-foreground rounded-3xl rounded-tl-md"
+                                    ? "bg-secondary text-foreground border border-border/50 rounded-[28px] rounded-tr-sm"
+                                    : "text-foreground rounded-2xl"
                             )}>
-                                <div className="prose prose-sm dark:prose-invert max-w-none break-words whitespace-pre-wrap">
+                                <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none break-words whitespace-pre-wrap font-inter">
                                     {msg.content}
                                 </div>
                             </div>
 
                             {msg.role === 'user' && (
-                                <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-secondary flex items-center justify-center border border-border">
-                                    <User size={18} className="text-muted-foreground" />
+                                <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center border border-border shadow-md mt-1">
+                                    <User size={18} className="text-brand-primary-orange" />
                                 </div>
                             )}
                         </motion.div>
@@ -173,47 +208,47 @@ export function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             className="flex gap-4 md:gap-6 justify-start"
                         >
-                            <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                                <Bot size={18} className="text-primary animate-pulse" />
+                            <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-brand-primary-orange/20 flex items-center justify-center border border-brand-primary-orange/30">
+                                <Bot size={18} className="text-brand-primary-orange animate-pulse" />
                             </div>
-                            <div className="bg-secondary/30 rounded-2xl px-5 py-4 flex items-center gap-2">
-                                <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                                <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                                <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce"></span>
+                            <div className="rounded-2xl px-5 py-4 flex items-center gap-2">
+                                <span className="w-2.5 h-2.5 bg-brand-primary-orange/40 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                <span className="w-2.5 h-2.5 bg-brand-primary-orange/40 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                <span className="w-2.5 h-2.5 bg-brand-primary-orange/40 rounded-full animate-bounce"></span>
                             </div>
                         </motion.div>
                     )}
                     <div ref={messagesEndRef} />
                 </div>
 
-                {/* Input Area (Fixed Bottom) */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background to-transparent pb-4 pt-12 px-4 md:px-0">
+                {/* Input Area (Centered Bottom) */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent pb-8 pt-20 px-4 md:px-0">
                     <div className="max-w-3xl mx-auto relative group">
 
-                        {/* + Menu Popup */}
+                        {/* Resource Menu */}
                         <AnimatePresence>
                             {isMenuOpen && (
                                 <motion.div
                                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    className="absolute bottom-full left-0 mb-4 w-64 bg-background/95 backdrop-blur-xl border border-border/50 rounded-xl shadow-2xl p-2 z-50 overflow-hidden"
+                                    className="absolute bottom-full left-0 mb-6 w-72 bg-background/95 backdrop-blur-2xl border border-border/50 rounded-[32px] shadow-2xl p-3 z-50 overflow-hidden ring-1 ring-black/5"
                                 >
-                                    <div className="text-xs font-semibold text-muted-foreground px-3 py-2 uppercase tracking-wider">Navigate</div>
+                                    <div className="text-[10px] font-bold text-brand-primary-orange px-4 py-2 uppercase tracking-[0.2em] opacity-80">Knowledge Base</div>
                                     <div className="space-y-1">
                                         {navigationOptions.map((option) => (
                                             <Link
                                                 key={option.label}
                                                 href={option.href}
-                                                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-secondary/80 transition-colors group/item"
+                                                className="flex items-center gap-4 p-3 rounded-2xl hover:bg-secondary transition-all group/item"
                                                 onClick={() => setIsMenuOpen(false)}
                                             >
-                                                <div className="p-2 bg-primary/10 text-primary rounded-md group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-colors">
-                                                    <option.icon size={16} />
+                                                <div className="p-2.5 bg-brand-primary-orange/10 text-brand-primary-orange rounded-xl group-hover/item:bg-brand-primary-orange group-hover/item:text-white transition-all shadow-sm">
+                                                    <option.icon size={18} />
                                                 </div>
                                                 <div>
-                                                    <div className="text-sm font-medium text-foreground">{option.label}</div>
-                                                    <div className="text-[10px] text-muted-foreground">{option.desc}</div>
+                                                    <div className="text-sm font-semibold text-foreground">{option.label}</div>
+                                                    <div className="text-[10px] text-muted-foreground font-inter tracking-tight">{option.desc}</div>
                                                 </div>
                                             </Link>
                                         ))}
@@ -223,30 +258,31 @@ export function Hero() {
                         </AnimatePresence>
 
                         <div className={cn(
-                            "relative flex items-end gap-2 p-2 bg-secondary/30 backdrop-blur-md rounded-3xl border border-white/20 dark:border-white/10 shadow-lg ring-1 ring-transparent focus-within:ring-primary/50 transition-all duration-300",
-                            isMenuOpen ? "ring-primary/50" : ""
+                            "relative flex items-end gap-2 p-3 bg-secondary/50 backdrop-blur-2xl rounded-[32px] border border-border/40 shadow-2xl transition-all duration-500 focus-within:border-brand-primary-orange/30 focus-within:ring-4 focus-within:ring-brand-primary-orange/5",
+                            isMenuOpen ? "ring-4 ring-brand-primary-orange/10 border-brand-primary-orange/30" : ""
                         )}>
 
-                            {/* Plus Button */}
                             <Button
                                 size="icon"
                                 variant="ghost"
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 className={cn(
-                                    "h-10 w-10 rounded-full shrink-0 transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5",
-                                    isMenuOpen ? "rotate-45 bg-white/10 dark:bg-white/5" : ""
+                                    "h-12 w-12 rounded-full shrink-0 transition-all duration-300 hover:bg-brand-primary-orange/10",
+                                    isMenuOpen ? "bg-brand-primary-orange/10 rotate-45" : ""
                                 )}
                             >
-                                <Plus size={20} className="text-muted-foreground hover:text-foreground transition-colors" />
+                                <Plus size={24} className={cn("transition-colors", isMenuOpen ? "text-brand-primary-orange" : "text-muted-foreground")} />
                             </Button>
 
                             <Textarea
+                                id="chat-textarea"
+                                name="message"
                                 ref={textareaRef}
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onKeyDown={handleKeyDown}
                                 placeholder="Ask about our case studies..."
-                                className="min-h-[44px] max-h-[120px] py-3 resize-none border-none bg-transparent text-base placeholder:text-muted-foreground/50 focus-visible:ring-0 px-2 scrollbar-hide"
+                                className="min-h-[52px] max-h-[250px] py-4 resize-none border-none bg-transparent text-base md:text-lg font-medium placeholder:text-muted-foreground/30 focus-visible:ring-0 px-2 scrollbar-hide font-jakarta"
                                 rows={1}
                             />
 
@@ -255,21 +291,20 @@ export function Hero() {
                                 onClick={handleSendMessage}
                                 disabled={!inputValue.trim() || isLoading}
                                 className={cn(
-                                    "h-10 w-10 rounded-full shrink-0 transition-all duration-300 shadow-md",
+                                    "h-12 w-12 rounded-full shrink-0 transition-all duration-500 shadow-xl",
                                     inputValue.trim()
-                                        ? "bg-primary text-primary-foreground hover:scale-105"
-                                        : "bg-muted text-muted-foreground/30 shadow-none"
+                                        ? "bg-gradient-to-br from-brand-primary-orange to-brand-red text-white hover:scale-105 shadow-brand-primary-orange/30"
+                                        : "bg-muted text-muted-foreground/20 shadow-none grayscale opacity-30"
                                 )}
                             >
-                                <Send size={18} className={inputValue.trim() ? "ml-0.5" : ""} />
+                                <Send size={22} className={inputValue.trim() ? "ml-0.5" : ""} />
                             </Button>
                         </div>
 
-                        <div className="text-center mt-3">
-                            <p className="text-[10px] md:text-xs text-muted-foreground/60 flex items-center justify-center gap-1.5">
-                                <Sparkles size={10} />
-                                <span className="hidden sm:inline">MPBx AI can make mistakes. Consider checking important information.</span>
-                                <span className="sm:hidden">AI Generated Response.</span>
+                        <div className="text-center mt-5">
+                            <p className="text-[10px] md:text-xs text-muted-foreground/40 flex items-center justify-center gap-2 font-inter tracking-wide">
+                                <Sparkles size={12} className="text-brand-primary-orange/30" />
+                                <span>MPBx AI Labs Delivery Studio • Powered by MyProBuddy Ecosystem</span>
                             </p>
                         </div>
                     </div>

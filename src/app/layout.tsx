@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -44,11 +43,9 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="min-h-screen flex flex-col pt-16">
+          <main className="min-h-screen flex flex-col">
             {children}
           </main>
-          <Footer />
         </ThemeProvider>
       </body>
     </html>
