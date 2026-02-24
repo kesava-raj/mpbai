@@ -7,16 +7,15 @@ An education-focused organisation wanted a structured, objective way to assess s
 We developed a data-driven assessment and scoring framework that combines structured inputs, rule-based evaluation, and explainable scoring logic to generate actionable insights for students and educators.
 
 ## What We Built
-- **Multi-dimensional assessment engine**
-- **Transparent scoring logic** with explainability
-- **Progress tracking** across cohorts and time
-- **Insights tailored** for students, parents, and institutions
+* Multi-dimensional assessment engine
+* Transparent scoring logic with explainability
+* Progress tracking across cohorts and time
+* Insights tailored for students, parents, and institutions
 
 ## Impact
-- **More objective decision-making**
-- **Clear identification of gaps** and improvement areas
-- **Improved stakeholder confidence** in outcomes
-- **Platform extensible** across programs and institutions
+* More objective decision-making
+* Clear identification of gaps and improvement areas
+* Improved stakeholder confidence in outcomes
+* Platform extensible across programs and institutions
 
-### Why it matters
-> "The system prioritised trust and explainability, not black-box scores."
+**Why it matters:** The system prioritised trust and explainability, not black-box scores.

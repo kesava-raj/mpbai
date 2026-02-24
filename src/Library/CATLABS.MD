@@ -7,17 +7,16 @@ A mid-sized enterprise operating in a tender-heavy sector was spending dispropor
 We built an AI-first tender intelligence and proposal automation platform that mirrors the client’s real operating workflow—without forcing process redesign. The system ingests raw tender documents, parses eligibility criteria, evaluates fit against internal capabilities, flags risks, and assembles submission-ready proposals.
 
 ## What We Built
-- **Automated tender discovery and relevance scoring**
-- **Eligibility logic mapped to internal capability matrices**
-- **Structured ingestion of 30+ mandatory documents**
-- **Risk flags, compliance checks, and audit trail**
-- **Proposal assembly with version control and role-based access**
+* Automated tender discovery and relevance scoring
+* Eligibility logic mapped to internal capability matrices
+* Structured ingestion of 30+ mandatory documents
+* Risk flags, compliance checks, and audit trail
+* Proposal assembly with version control and role-based access
 
 ## Impact
-- **Significant reduction in bid preparation time**
-- **Improved bid discipline**—fewer low-probability submissions
-- **Lower dependency on individual experts**
-- **Consistent, auditable tender responses across teams**
+* Significant reduction in bid preparation time
+* Improved bid discipline—fewer low-probability submissions
+* Lower dependency on individual experts
+* Consistent, auditable tender responses across teams
 
-### Why it matters
-> "This was not 'AI for analysis only,' but AI embedded into execution, ensuring speed without compromising compliance."
+**Why it matters:** This was not “AI for analysis only,” but AI embedded into execution, ensuring speed without compromising compliance.

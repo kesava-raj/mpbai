@@ -26,33 +26,39 @@ export async function POST(req: Request) {
         OFFICIAL CASE STUDIES:
 
         1. End-to-End Tender Intelligence & Proposal Automation (Government Contracting)
-           - Challenge: Fragmented, error-prone process for identifying tenders and assembling proposals under tight deadlines.
-           - Intervention: Built an AI-first platform for ingestion, eligibility analysis, and proposal assembly.
-           - Impact: Significant reduction in bid preparation time, improved bid discipline, auditable responses.
+           - Challenge: A mid-sized enterprise operating in a tender-heavy sector was spending disproportionate management time on identifying relevant tenders, manually checking eligibility, coordinating documentation, and assembling proposals under tight deadlines.
+           - Intervention: Built an AI-first tender intelligence and proposal automation platform that mirrors the client’s real operating workflow.
+           - What We Built: Automated tender discovery and relevance scoring, Eligibility logic mapping, Structured ingestion of 30+ mandatory docs, Risk flags, compliance checks, and Proposal assembly with version control.
+           - Impact: Significant reduction in bid preparation time, Improved bid discipline, Lower dependency on individual experts, Consistent, auditable tender responses.
            - Key Quote: "AI embedded into execution, ensuring speed without compromising compliance."
 
-        2. Clinical Workflow Automation (Diagnostics / Healthcare)
-           - Challenge: Fragmented workflows across intake, routing, and reporting in a fast-growing diagnostics network.
-           - Intervention: Designed a workflow-first automation layer digitizing the operational process.
-           - Impact: Immediate operational visibility, reduced coordination errors, scalable architecture.
+        2. Clinical Workflow Automation for a Diagnostics Network (Healthcare)
+           - Challenge: A fast-growing diagnostics group struggled with fragmented workflows across intake, routing, and reporting. Legacy systems existed, but none reflected how work was actually done on the ground.
+           - Intervention: Designed a workflow-first automation layer that precisely digitised the existing operational process.
+           - What We Built: End-to-end workflow automation (intake to reporting), Real-time operational dashboards, Rule engines derived from SOPs, and Longitudinal data exhaust for future intelligence.
+           - Impact: Immediate operational visibility, Reduced coordination errors, Foundation for explainable clinical intelligence, Scalable architecture.
            - Key Quote: "Built as a long-term operating system, not a one-off software deployment."
 
         3. AI-Driven Student Assessment & Progress Intelligence (EdTech)
-           - Challenge: Lacked diagnostic depth and longitudinal insight in student readiness assessment.
-           - Intervention: Data-driven assessment and scoring framework with explainable logic.
-           - Impact: Objective decision-making, clear identification of gaps, improved stakeholder confidence.
+           - Challenge: An education organisation wanted a structured, objective way to assess student readiness and track progress—without relying solely on subjective evaluations.
+           - Intervention: Data-driven assessment and scoring framework that combines structured inputs and explainable scoring logic.
+           - What We Built: Multi-dimensional assessment engine, Transparent scoring logic with explainability, Progress tracking across cohorts, and Insights tailored for stakeholders.
+           - Impact: More objective decision-making, Clear identification of gaps, Improved stakeholder confidence, Platform extensible across programs.
            - Key Quote: "Prioritized trust and explainability, not black-box scores."
 
-        4. AI-Led Equity Readiness & Investor Alignment (FinTech / VC)
-           - Challenge: Founders lacked structured ways to assess investor-readiness before fundraising.
-           - Intervention: AI-assisted screening platform evaluating business, financial, governance, and narrative dimensions.
-           - Impact: Higher quality founder-investor conversations, reduced noise, better use of time.
+        4. AI-Led Equity Readiness & Investor Alignment Platform (FinTech / VC)
+           - Challenge: Early-stage companies often approach equity fundraising without being investor-ready—leading to wasted effort and misaligned conversations.
+           - Intervention: AI-assisted equity readiness and screening platform that evaluates startups across business and financial dimensions.
+           - What We Built: Structured founder and company intake, AI-generated readiness diagnostics, Clear classification (pursue/defer/rework), and Investor-aligned recommendations.
+           - Impact: Higher quality founder-investor conversations, Reduced noise and false starts, Better use of founder and investor time, Improved credibility.
            - Key Quote: "Shifts fundraising from hope-driven outreach to data-informed preparation."
 
         5. Grant Discovery, Eligibility & Application Intelligence (Non-Profit / Research)
-           - Challenge: Startups/MSMEs struggle to interpret grant eligibility and prepare compliant applications.
-           - Intervention: Grant intelligence platform with AI-driven eligibility analysis and guided workflows.
-           - Impact: Improved success rates, lower dependence on consultants, faster application cycles.
+           - Challenge: Startups and MSMEs struggle to discover relevant grants, interpret eligibility clauses, and prepare compliant applications.
+           - Intervention: Grant intelligence platform that combines structured grant databases with AI-driven eligibility analysis.
+           - What We Built: Continuously updated grant corpus, Eligibility extraction and rule mapping, Fit scoring based on company profile, and Guided application workflows.
+           - Impact: Improved grant discovery and success rates, Lower dependence on manual consultants, Faster application cycles, Clear audit trail.
+           - Key Quote: "Grants became a repeatable process, not a one-time gamble."
 
         OUR APPROACH:
         We focus on "AI embedded into execution" and building "long-term operating systems."
