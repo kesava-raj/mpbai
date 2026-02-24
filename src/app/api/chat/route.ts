@@ -63,7 +63,9 @@ export async function POST(req: Request) {
         We focus on "AI embedded into execution" and building "long-term operating systems."
 
         CONTACT INFO:
-        Email: hello@mpbxailabs.com. Roadmap within 24 hours.
+        Email: reachus@myprobuddy.com
+        Phone: +91 99522 37700
+        Roadmap within 24 hours.
         `;
 
         const prompt = `

@@ -216,17 +216,17 @@ export function Testimonials() {
                             </p>
 
                             <div className="space-y-4">
-                                <a href="/contact" className="group flex items-center gap-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-brand-primary-orange transition-colors">
+                                <a href="tel:+919952237700" className="group flex items-center gap-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-brand-primary-orange transition-colors">
                                     <div className="w-8 h-8 rounded-full bg-brand-primary-orange/10 flex items-center justify-center text-brand-primary-orange group-hover:scale-110 transition-transform">
                                         <Phone size={14} />
                                     </div>
-                                    Schedule a Call
+                                    +91 99522 37700
                                 </a>
-                                <a href="mailto:hello@mpbxailabs.com" className="group flex items-center gap-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-brand-primary-orange transition-colors">
+                                <a href="mailto:reachus@myprobuddy.com" className="group flex items-center gap-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-brand-primary-orange transition-colors">
                                     <div className="w-8 h-8 rounded-full bg-brand-primary-orange/10 flex items-center justify-center text-brand-primary-orange group-hover:scale-110 transition-transform">
                                         <Mail size={14} />
                                     </div>
-                                    hello@mpbxailabs.com
+                                    reachus@myprobuddy.com
                                 </a>
                             </div>
                         </motion.div>
