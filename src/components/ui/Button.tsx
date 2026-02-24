@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, HTMLMotionProps } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 // Using a looser type definition to avoid conflicts between React 19 and Framer Motion types
@@ -29,6 +29,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             icon: "h-10 w-10 p-0 rounded-md",
         };
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const MotionButton = motion.button as any;
 
         return (

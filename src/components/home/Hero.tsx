@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
-import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/utils";
 
 type Message = {
@@ -98,6 +97,7 @@ export function Hero() {
             };
 
             setMessages(prev => [...prev, aiMessage]);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.error(error);
             const errorMessage: Message = {

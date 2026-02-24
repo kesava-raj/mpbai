@@ -130,6 +130,7 @@ export async function POST(req: Request) {
         }
 
         return NextResponse.json({ reply: text });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error('SERVER SIDE CHAT ERROR:', error);
         // Return the actual error message to the client for debugging

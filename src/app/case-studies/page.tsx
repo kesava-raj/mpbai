@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     FileText, HeartPulse, GraduationCap, TrendingUp, Search,
-    ChevronDown, ChevronUp, CheckCircle2, Zap, ArrowRight,
+    ChevronDown, CheckCircle2, Zap, ArrowRight,
     ShieldCheck, BarChart3, Lock
 } from "lucide-react";
 
@@ -211,7 +211,7 @@ export default function CaseStudiesPage() {
                                                     <Zap className="text-brand-primary-orange flex-shrink-0 mt-1" size={20} />
                                                     <div>
                                                         <span className="block text-xs font-bold uppercase text-brand-primary-orange mb-1">Why it matters</span>
-                                                        <p className="text-zinc-800 dark:text-zinc-200 font-medium italic">"{study.why}"</p>
+                                                        <p className="text-zinc-800 dark:text-zinc-200 font-medium italic">&quot;{study.why}&quot;</p>
                                                     </div>
                                                 </div>
 

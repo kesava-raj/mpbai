@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle2, Building2, Clock, Zap, BarChart3, Mail, Phone, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, Zap, BarChart3, Mail, Phone } from "lucide-react";
 
 // Expanded data structure to match the Case Study layout
 const testimonials = [
