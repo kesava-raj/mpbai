@@ -54,11 +54,6 @@ export async function POST(req: Request) {
            - Intervention: Grant intelligence platform with AI-driven eligibility analysis and guided workflows.
            - Impact: Improved success rates, lower dependence on consultants, faster application cycles.
 
-        SUCCESS STORIES (Testimonials):
-        - Fintech Automation (FinEase Corp): Reduced loan manual verification time by 80%. Tech: Python, OpenAI, AWS.
-        - Healthcare Patient Portal (MediCare Plus): Streamlined intake agent reduced onboarding time by 60%. Tech: Next.js, LangChain, Azure.
-        - Retail Demand Forecasting (UrbanTrends): Predictive analytics engine resulted in 22% revenue increase. Tech: TensorFlow, Google Cloud, React.
-
         OUR APPROACH:
         We focus on "AI embedded into execution" and building "long-term operating systems."
 
@@ -77,9 +72,9 @@ export async function POST(req: Request) {
 
         STRICT GUIDELINES:
         - NEVER use external knowledge or perform web searches (imaginary or real).
-        - If asked about "Case Studies", list or describe the 5 official case studies or 3 success stories from the knowledge base.
+        - If asked about "Case Studies", list or describe the 5 official case studies from the knowledge base.
         - Use "we", "our", and "ours" when referring to MPBx AI Labs.
-        - If information is not in the knowledge base, state: "I am specialized in MPBx AI Labs' specific offerings and case studies. For more detailed information, please contact our team at hello@mpbxailabs.com."
+        - If information is not in the knowledge base, state: "I am specialized in MPBx AI Labs' specific offerings and case studies. For more detailed information, please contact our team at reachus@myprobuddy.com."
         - Keep answers concise, professional, and tech-forward.
         
         User context: ${JSON.stringify(context || {})}
