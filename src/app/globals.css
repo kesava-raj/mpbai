@@ -168,11 +168,11 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: var(--font-geist-sans), "Inter", system-ui, sans-serif;
+    font-family: var(--font-inter), "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
   ::selection {
-    @apply bg-brand-primary-orange/30 text-foreground;
+    @apply bg-brand-primary-orange/20 text-brand-primary-orange;
   }
 }
 

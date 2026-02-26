@@ -185,10 +185,10 @@ export function Hero() {
                             )}
 
                             <div className={cn(
-                                "max-w-[85%] md:max-w-[80%] px-6 py-4 text-sm md:text-lg leading-relaxed shadow-sm transition-all",
+                                "max-w-[85%] md:max-w-[80%] px-6 py-4 text-sm md:text-base leading-relaxed transition-all",
                                 msg.role === 'user'
-                                    ? "bg-secondary text-foreground border border-border/50 rounded-[28px] rounded-tr-sm"
-                                    : "text-foreground rounded-2xl"
+                                    ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-md rounded-[24px] rounded-tr-sm"
+                                    : "bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm text-foreground rounded-[24px] rounded-tl-sm"
                             )}>
                                 <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none break-words whitespace-pre-wrap font-inter">
                                     {msg.content}
@@ -258,8 +258,8 @@ export function Hero() {
                         </AnimatePresence>
 
                         <div className={cn(
-                            "relative flex items-end gap-2 p-3 bg-secondary/50 backdrop-blur-2xl rounded-[32px] border border-border/40 shadow-2xl transition-all duration-500 focus-within:border-brand-primary-orange/30 focus-within:ring-4 focus-within:ring-brand-primary-orange/5",
-                            isMenuOpen ? "ring-4 ring-brand-primary-orange/10 border-brand-primary-orange/30" : ""
+                            "relative flex items-end gap-2 p-2 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-2xl rounded-[32px] border border-zinc-200/60 dark:border-zinc-800/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-500 focus-within:border-brand-primary-orange/40 focus-within:ring-4 focus-within:ring-brand-primary-orange/10",
+                            isMenuOpen ? "ring-4 ring-brand-primary-orange/10 border-brand-primary-orange/40" : ""
                         )}>
 
                             <Button
