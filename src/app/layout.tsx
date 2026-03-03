@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
+
+import Sidebar from "@/components/layout/Sidebar";
 
 
 const poppins = Poppins({
@@ -37,16 +38,12 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${inter.variable} ${jakarta.variable} antialiased bg-background text-foreground font-body`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          <main className="min-h-screen flex flex-col">
+        <div className="flex h-screen overflow-hidden bg-background">
+          <Sidebar />
+          <main className="flex-1 overflow-y-auto relative scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
             {children}
           </main>
-        </ThemeProvider>
+        </div>
       </body>
     </html>
   );

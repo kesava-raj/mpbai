@@ -70,8 +70,8 @@ export function WhyChooseUs() {
                                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 bg-gradient-to-br ${feature.gradient} transition-opacity duration-300`} />
 
                                 <div className="p-6 relative z-10">
-                                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} p-[1px] mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                                        <div className="w-full h-full rounded-2xl bg-background/90 backdrop-blur-xl flex items-center justify-center">
+                                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} p-[1px] mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300 will-change-transform`}>
+                                        <div className="w-full h-full rounded-2xl bg-background flex items-center justify-center">
                                             <feature.icon strokeWidth={1.5} size={24} className="text-foreground" />
                                         </div>
                                     </div>

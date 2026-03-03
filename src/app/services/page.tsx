@@ -7,6 +7,7 @@ import { MessageSquareText, Headset, BrainCircuit, Workflow, Check, ArrowRight }
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Footer from "@/components/layout/Footer";
 
 const services = [
     {
@@ -205,6 +206,7 @@ export default function ServicesPage() {
                     </Section>
                 ))}
             </div>
+            <Footer />
         </div>
     );
 }

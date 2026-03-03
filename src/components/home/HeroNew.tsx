@@ -1,154 +1,147 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
-import { Input, Textarea } from "@/components/ui/Input";
-import { ArrowRight, Sparkles } from "lucide-react";
-import Link from "next/link";
+import { Textarea } from "@/components/ui/Input";
+import { ArrowRight, Bot } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 
-export function Hero() {
-    const [step, setStep] = useState(1);
+interface HeroProps {
+    onStartChat?: (message: string) => void;
+}
+
+export function Hero({ onStartChat }: HeroProps) {
     const [projectDesc, setProjectDesc] = useState("");
 
-    const handleContinue = () => {
-        if (projectDesc.trim().length > 0) {
-            setStep(2);
+    const handleStartChat = () => {
+        if (projectDesc.trim().length > 0 && onStartChat) {
+            onStartChat(projectDesc);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleStartChat();
         }
     };
 
     return (
-        <Section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
+        <Section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden flex flex-col justify-center min-h-[90vh]">
 
-            {/* Background Gradients */}
-            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-primary-orange/15 rounded-full blur-[100px] animate-pulse-glow" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand-purple/15 rounded-full blur-[100px] animate-pulse-glow delay-1000" />
-                <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[60%] h-[60%] bg-brand-red/5 rounded-full blur-[80px] animate-float" />
-            </div>
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none bg-grid-pattern opacity-[0.02] dark:opacity-[0.05]" />
 
-            <div className="container mx-auto px-4 md:px-6 relative z-10 text-center">
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
 
-                {/* Badge */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                    className="mb-8"
-                >
-                    <span className="inline-flex items-center gap-2 py-2 px-5 rounded-full bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 text-sm font-semibold text-foreground shadow-lg hover:scale-105 transition-transform duration-300 ring-1 ring-white/20">
-                        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-brand-primary-orange to-brand-red text-white shadow-sm">
-                            <Sparkles size={10} fill="currentColor" />
-                        </span>
-                        <span>AI-Powered Solutions</span>
-                    </span>
-                </motion.div>
+                    {/* Left: Typography & CTA */}
+                    <div className="flex flex-col items-start text-left max-w-xl">
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, ease: "easeOut" }}
+                            className="text-5xl md:text-6xl lg:text-[5.5rem] font-medium tracking-tighter text-foreground mb-6 leading-[1.05]"
+                        >
+                            Got an idea?<br />
+                            <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-primary-orange to-brand-red">Let&apos;s build it.</span>
+                        </motion.h1>
 
-                {/* Headline */}
-                <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-                    className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-balance mb-6"
-                >
-                    Got an idea? <br />
-                    <span className="text-gradient">Let’s build it.</span>
-                </motion.h1>
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                            className="text-lg md:text-xl text-muted-foreground max-w-lg mb-10 leading-relaxed"
+                        >
+                            Describe your project and we&apos;ll show you how AI can make it happen. All conversations are confidential.
+                        </motion.p>
 
-                {/* Subtext */}
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-                    className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
-                >
-                    Describe your project and we’ll show you how AI can make it happen.
-                </motion.p>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                        >
+                            <Button
+                                onClick={() => document.getElementById('hero-input')?.focus()}
+                                className="rounded-[2rem] px-8 py-7 text-lg font-bold bg-brand-primary-orange hover:bg-brand-dark-orange text-white transition-all shadow-xl shadow-brand-primary-orange/20 hover:shadow-brand-primary-orange/40 hover:-translate-y-1 group border-none"
+                            >
+                                Get Started <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                        </motion.div>
 
-                {/* Input Card */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: 0.3, type: "spring", stiffness: 100 }}
-                    className="w-full max-w-2xl mx-auto"
-                >
-                    <Card className="glass p-2 md:p-3 shadow-xl ring-1 ring-black/5 dark:ring-white/20 bg-white/60 dark:bg-black/40 backdrop-blur-xl">
-                        <AnimatePresence mode="wait">
-                            {step === 1 ? (
-                                <motion.div
-                                    key="step1"
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -10 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="flex flex-col gap-4"
-                                >
-                                    <div className="relative">
-                                        <Textarea
-                                            placeholder="Tell us what you want to build..."
-                                            className="min-h-[100px] resize-none border-none bg-transparent text-lg placeholder:text-muted-foreground/50 focus-visible:ring-0 p-4"
-                                            value={projectDesc}
-                                            onChange={(e) => setProjectDesc(e.target.value)}
-                                        />
-                                        <div className="absolute bottom-2 right-2">
-                                            <Button
-                                                onClick={handleContinue}
-                                                size="sm"
-                                                variant="primary"
-                                                className="rounded-full w-10 h-10 p-0 flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg hover:shadow-brand-primary-orange/30 bg-gradient-to-br from-brand-primary-orange to-brand-dark-orange"
-                                                disabled={!projectDesc.trim()}
-                                            >
-                                                <ArrowRight size={18} strokeWidth={2.5} />
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    key="step2"
-                                    initial={{ opacity: 0, x: 10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 10 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="flex flex-col gap-3 p-3"
-                                >
-                                    <div className="text-left mb-1">
-                                        <h3 className="text-sm font-medium text-muted-foreground">Almost there! Where should we send the plan?</h3>
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <Input placeholder="Your Name" className="bg-white/50 dark:bg-black/20 border-black/5 dark:border-white/10" />
-                                        <Input placeholder="Work Email" type="email" className="bg-white/50 dark:bg-black/20 border-black/5 dark:border-white/10" />
-                                    </div>
-                                    <div className="flex justify-between items-center mt-2">
-                                        <button
-                                            onClick={() => setStep(1)}
-                                            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                                        >
-                                            Back
-                                        </button>
-                                        <Link href="/contact">
-                                            <Button variant="primary" className="gap-2 group shadow-md text-sm px-6">
-                                                Continue <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </Card>
-
-                    {/* Trust/Floating Elements */}
-                    <div className="mt-10 flex flex-wrap justify-center gap-6 md:gap-10 opacity-60 hover:opacity-100 transition-opacity duration-500">
-                        {/* Abstract Logos or Text */}
-                        <span className="text-sm font-semibold text-muted-foreground">FinTech</span>
-                        <span className="text-sm font-semibold text-muted-foreground">HealthCare</span>
-                        <span className="text-sm font-semibold text-muted-foreground">Logistics</span>
-                        <span className="text-sm font-semibold text-muted-foreground">EdTech</span>
+                        {/* Footer Sub Links */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5, delay: 0.3 }}
+                            className="mt-16 sm:mt-24 flex flex-wrap items-center gap-x-4 gap-y-3 text-[13px] md:text-[15px] text-muted-foreground/60 font-medium font-inter"
+                        >
+                            <span className="hover:text-foreground transition-colors cursor-default">AI Infrastructure</span>
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-border"></span>
+                            <span className="hover:text-foreground transition-colors cursor-default">Search Architecture</span>
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-border"></span>
+                            <span className="hover:text-foreground transition-colors cursor-default">Interface Engineering</span>
+                            <span className="hidden xl:inline-block w-1.5 h-1.5 rounded-full bg-border"></span>
+                            <span className="hover:text-foreground transition-colors cursor-default">Algorithmic Systems</span>
+                        </motion.div>
                     </div>
-                </motion.div>
 
+                    {/* Right: Mockup Interface */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95, x: 20 }}
+                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 80 }}
+                        className="w-full max-w-lg mx-auto lg:mr-0 lg:ml-auto relative"
+                    >
+                        {/* Glow Behind Chat */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-[radial-gradient(circle,rgba(252,81,9,0.05)_0%,transparent_50%)] pointer-events-none -z-10 will-change-transform" />
+
+                        <Card className="p-6 md:p-8 rounded-[2rem] shadow-[0_32px_64px_rgba(0,0,0,0.08)] border border-slate-200/60 bg-white/95 backdrop-blur-3xl">
+                            {/* Chat Header */}
+                            <div className="flex items-center justify-between mb-8">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200 shadow-sm relative overflow-hidden">
+                                        <Bot className="text-slate-600" size={24} />
+                                    </div>
+                                    <div>
+                                        <div className="text-[15px] font-bold text-foreground">Agent Violet</div>
+                                        <div className="text-[13px] font-medium text-muted-foreground">AI Strategy Advisor</div>
+                                    </div>
+                                </div>
+                                {/* Status dot on the right side */}
+                                <div className="w-2.5 h-2.5 bg-[#22c55e] rounded-full shadow-sm" />
+                            </div>
+
+                            {/* AI Message Bubble */}
+                            <div className="bg-slate-50 text-foreground border border-slate-200 shadow-sm p-5 rounded-3xl rounded-tl-sm text-[15px] md:text-base mb-8 leading-relaxed max-w-[90%] font-medium">
+                                I see you&apos;re building something. Something that needs intelligence. Tell me about your workflow or project idea.
+                            </div>
+
+                            {/* Input Area */}
+                            <div className="relative bg-white rounded-[1.75rem] p-1.5 border border-slate-200 focus-within:border-brand-primary-orange/30 focus-within:ring-4 focus-within:ring-brand-primary-orange/5 transition-all group shadow-sm">
+                                <Textarea
+                                    id="hero-input"
+                                    placeholder="Type your response..."
+                                    className="min-h-[56px] resize-none border-none bg-white text-slate-700 text-[15px] placeholder:text-slate-400 focus-visible:ring-0 p-4 pt-4 pb-12 w-full font-inter"
+                                    value={projectDesc}
+                                    onChange={(e) => setProjectDesc(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                />
+                                <div className="absolute bottom-2 right-2">
+                                    <Button
+                                        onClick={handleStartChat}
+                                        size="icon"
+                                        className="w-[42px] h-[42px] rounded-full bg-slate-900 hover:bg-brand-primary-orange text-white transition-all shadow-md group-focus-within:bg-brand-primary-orange group-focus-within:text-white shrink-0"
+                                        disabled={!projectDesc.trim()}
+                                    >
+                                        <ArrowRight size={20} className={projectDesc.trim() ? "translate-x-0.5 transition-transform" : ""} />
+                                    </Button>
+                                </div>
+                            </div>
+                        </Card>
+                    </motion.div>
+                </div>
             </div>
         </Section>
     );

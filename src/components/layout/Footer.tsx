@@ -13,12 +13,9 @@ export default function Footer() {
 
                     <div className="col-span-1 md:col-span-1 space-y-4">
                         <Link href="/" className="flex items-center gap-2 group">
-                            <div className="relative h-7 w-7 transition-transform group-hover:rotate-12">
-                                <img src="/logo.svg" alt="MPBx AI Labs" className="h-full w-full object-contain" />
+                            <div className="relative h-10 w-auto transition-transform group-hover:scale-105">
+                                <img src="/new-logo.jpg" alt="MPBx AI Labs" className="h-full w-auto object-contain" />
                             </div>
-                            <span className="text-lg font-bold tracking-tight text-foreground">
-                                MPBx <span className="text-primary">AI Labs</span>
-                            </span>
                         </Link>
                         <p className="text-muted-foreground leading-relaxed max-w-xs">
                             Architecting the future of enterprise intelligence. Modular. Scalable. Autonomous.

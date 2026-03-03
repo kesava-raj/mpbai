@@ -34,7 +34,7 @@ The project is set up and dependencies are installed. You can run the developmen
 npm run dev
 ```
 
-The site will be available at `http://localhost:5000`.
+The site will be available at `http://localhost:8080`.
 
 ## Next Steps
 - **Logo**: The site uses the `logo.svg` found in your `public` folder. Ensure this file contains your actual brand logo.

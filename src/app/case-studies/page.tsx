@@ -7,6 +7,7 @@ import {
     ChevronDown, CheckCircle2, Zap, ArrowRight,
     ShieldCheck, BarChart3, Lock
 } from "lucide-react";
+import Footer from "@/components/layout/Footer";
 
 const caseStudies = [
     {
@@ -126,23 +127,23 @@ export default function CaseStudiesPage() {
     const [expandedId, setExpandedId] = useState<string | null>("tender");
 
     return (
-        <div className="min-h-screen pt-24 pb-20 bg-zinc-50 dark:bg-[#020817] transition-colors duration-300">
+        <div className="min-h-screen pt-24 pb-20 bg-slate-50/50 transition-colors duration-300">
 
             {/* --- Hero Section --- */}
             <div className="container mx-auto px-4 md:px-6 mb-16 text-center relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary-orange/10 text-brand-primary-orange text-xs font-bold uppercase tracking-widest mb-6"
+                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary-orange/10 text-brand-primary-orange text-xs font-bold uppercase tracking-widest mb-6 border border-brand-primary-orange/20"
                 >
                     <Lock size={12} /> Client-Confidential
                 </motion.div>
 
-                <h1 className="text-4xl md:text-6xl font-bold mb-6 text-zinc-900 dark:text-white tracking-tight">
-                    Selected <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary-orange to-brand-red">Case Studies</span>
+                <h1 className="text-4xl md:text-6xl font-bold mb-6 text-slate-900 tracking-tight">
+                    Selected <span className="text-gradient">Case Studies</span>
                 </h1>
 
-                <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto mb-8">
+                <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
                     To respect client confidentiality, all case studies are anonymised.
                     These examples demonstrate our ability to deliver robust, regulator-aware AI solutions.
                 </p>
@@ -162,8 +163,8 @@ export default function CaseStudiesPage() {
                                 className={`
                                     group rounded-3xl overflow-hidden border transition-all duration-300
                                     ${expandedId === study.id
-                                        ? "bg-white dark:bg-zinc-900 border-brand-primary-orange/50 shadow-2xl shadow-brand-primary-orange/10"
-                                        : "bg-white/50 dark:bg-zinc-900/40 border-zinc-200 dark:border-white/10 hover:border-brand-primary-orange/30 hover:bg-white dark:hover:bg-zinc-900/80"
+                                        ? "bg-white border-brand-primary-orange/40 shadow-2xl shadow-brand-primary-orange/5"
+                                        : "bg-white/50 border-slate-200 hover:border-brand-primary-orange/30 hover:bg-white"
                                     }
                                 `}
                             >
@@ -174,7 +175,7 @@ export default function CaseStudiesPage() {
                                 >
                                     <div className="flex items-center gap-6">
                                         {/* Icon Box */}
-                                        <div className={`hidden md:flex flex-shrink-0 w-16 h-16 rounded-2xl items-center justify-center text-white bg-gradient-to-br ${study.gradient} shadow-lg shadow-brand-primary-orange/20`}>
+                                        <div className={`hidden md:flex flex-shrink-0 w-16 h-16 rounded-2xl items-center justify-center text-white bg-gradient-to-br ${study.gradient} shadow-lg shadow-brand-primary-orange/10`}>
                                             <study.icon size={32} />
                                         </div>
 
@@ -184,14 +185,14 @@ export default function CaseStudiesPage() {
                                                     {study.industry}
                                                 </span>
                                             </div>
-                                            <h3 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-white group-hover:text-brand-primary-orange transition-colors">
+                                            <h3 className="text-xl md:text-2xl font-bold text-slate-900 group-hover:text-brand-primary-orange transition-colors">
                                                 {study.title}
                                             </h3>
                                         </div>
                                     </div>
 
-                                    <div className={`flex-shrink-0 p-2 rounded-full transition-transform duration-300 ${expandedId === study.id ? 'rotate-180 bg-zinc-100 dark:bg-white/10' : ''}`}>
-                                        <ChevronDown className="text-zinc-400" />
+                                    <div className={`flex-shrink-0 p-2 rounded-full transition-transform duration-300 ${expandedId === study.id ? 'rotate-180 bg-slate-50' : ''}`}>
+                                        <ChevronDown className="text-slate-400" />
                                     </div>
                                 </button>
 
@@ -204,14 +205,14 @@ export default function CaseStudiesPage() {
                                             exit={{ height: 0, opacity: 0 }}
                                             transition={{ duration: 0.3, ease: "easeInOut" }}
                                         >
-                                            <div className="px-6 md:px-8 pb-8 md:pb-10 pt-2 border-t border-dashed border-zinc-200 dark:border-white/10">
+                                            <div className="px-6 md:px-8 pb-8 md:pb-10 pt-2 border-t border-dashed border-slate-100">
 
                                                 {/* "Why it matters" Highlight */}
-                                                <div className="mb-10 mt-6 p-5 rounded-2xl bg-brand-primary-orange/5 border border-brand-primary-orange/10 flex gap-4">
+                                                <div className="mb-10 mt-6 p-5 rounded-2xl bg-slate-50 border border-slate-200 flex gap-4">
                                                     <Zap className="text-brand-primary-orange flex-shrink-0 mt-1" size={20} />
                                                     <div>
                                                         <span className="block text-xs font-bold uppercase text-brand-primary-orange mb-1">Why it matters</span>
-                                                        <p className="text-zinc-800 dark:text-zinc-200 font-medium italic">&quot;{study.why}&quot;</p>
+                                                        <p className="text-slate-800 font-medium italic">&quot;{study.why}&quot;</p>
                                                     </div>
                                                 </div>
 
@@ -219,20 +220,20 @@ export default function CaseStudiesPage() {
                                                     {/* Left Column: Challenge & Intervention */}
                                                     <div className="space-y-8">
                                                         <div>
-                                                            <h4 className="text-lg font-bold text-zinc-900 dark:text-white mb-3 flex items-center gap-2">
-                                                                <ShieldCheck size={20} className="text-red-500" />
+                                                            <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                                                                <ShieldCheck size={20} className="text-brand-red" />
                                                                 The Challenge
                                                             </h4>
-                                                            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                                            <p className="text-slate-600 leading-relaxed">
                                                                 {study.challenge}
                                                             </p>
                                                         </div>
                                                         <div>
-                                                            <h4 className="text-lg font-bold text-zinc-900 dark:text-white mb-3 flex items-center gap-2">
+                                                            <h4 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
                                                                 <Zap size={20} className="text-brand-primary-orange" />
                                                                 Our Intervention
                                                             </h4>
-                                                            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                                                            <p className="text-slate-600 leading-relaxed">
                                                                 {study.intervention}
                                                             </p>
                                                         </div>
@@ -240,11 +241,11 @@ export default function CaseStudiesPage() {
 
                                                     {/* Right Column: Built & Impact */}
                                                     <div className="space-y-8">
-                                                        <div className="bg-zinc-50 dark:bg-white/5 rounded-2xl p-6 border border-zinc-100 dark:border-white/5">
-                                                            <h4 className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-4">What We Built</h4>
+                                                        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                                                            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">What We Built</h4>
                                                             <ul className="space-y-3">
                                                                 {study.built.map((item, i) => (
-                                                                    <li key={i} className="flex items-start gap-3 text-zinc-700 dark:text-zinc-300 text-sm">
+                                                                    <li key={i} className="flex items-start gap-3 text-slate-700 text-sm">
                                                                         <CheckCircle2 size={16} className="text-brand-primary-orange flex-shrink-0 mt-0.5" />
                                                                         <span>{item}</span>
                                                                     </li>
@@ -253,12 +254,12 @@ export default function CaseStudiesPage() {
                                                         </div>
 
                                                         <div>
-                                                            <h4 className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-4 flex items-center gap-2">
+                                                            <h4 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
                                                                 <BarChart3 size={16} /> Impact
                                                             </h4>
                                                             <ul className="space-y-3">
                                                                 {study.impact.map((item, i) => (
-                                                                    <li key={i} className="flex items-start gap-3 text-zinc-700 dark:text-zinc-300 text-sm font-medium">
+                                                                    <li key={i} className="flex items-start gap-3 text-slate-700 text-sm font-medium">
                                                                         <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 flex-shrink-0" />
                                                                         <span>{item}</span>
                                                                     </li>
@@ -282,12 +283,12 @@ export default function CaseStudiesPage() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="mt-20 text-center bg-zinc-900 dark:bg-white text-white dark:text-black rounded-3xl p-10 md:p-16 relative overflow-hidden"
+                    className="mt-20 text-center bg-white border border-slate-200 shadow-xl shadow-slate-200/50 text-slate-900 rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden"
                 >
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary-orange/20 rounded-full blur-[80px]" />
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary-orange/5 rounded-full blur-[80px]" />
                     <div className="relative z-10 max-w-2xl mx-auto">
                         <h2 className="text-3xl md:text-4xl font-bold mb-6">If this resonates, let&apos;s talk.</h2>
-                        <p className="text-zinc-400 dark:text-zinc-600 text-lg mb-8">
+                        <p className="text-slate-500 text-lg mb-8">
                             We build systems that work in the real world, navigating complex regulatory and operational environments.
                         </p>
                         <a
@@ -300,6 +301,7 @@ export default function CaseStudiesPage() {
                 </motion.div>
             </div>
 
+            <Footer />
         </div>
     );
 }

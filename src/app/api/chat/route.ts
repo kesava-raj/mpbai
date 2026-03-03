@@ -1,5 +1,57 @@
 import { NextResponse } from 'next/server';
 
+// Fallback chain: try these models in order if one is rate-limited
+const MODEL_FALLBACKS = [
+    'gemini-2.0-flash',
+    'gemini-2.0-flash-lite',
+    'gemini-2.5-flash',
+];
+
+async function callGemini(apiKey: string, requestBody: object): Promise<{ text: string; model: string }> {
+    for (const model of MODEL_FALLBACKS) {
+        console.log(`Trying model: ${model}...`);
+
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody),
+            }
+        );
+
+        if (response.status === 429) {
+            console.warn(`Model ${model} rate-limited (429). Trying next fallback...`);
+            continue; // Try the next model
+        }
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Gemini API Error (${model}, Status: ${response.status}):`, errorText);
+            throw new Error(`Gemini API Error: ${response.status} - ${errorText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+            console.error(`Gemini API Data Error (${model}):`, data.error);
+            throw new Error(data.error.message || 'Gemini API Error');
+        }
+
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!text) {
+            console.error(`Unexpected response from ${model}:`, JSON.stringify(data, null, 2));
+            throw new Error('Invalid response format from Gemini');
+        }
+
+        console.log(`✅ Success with model: ${model}`);
+        return { text, model };
+    }
+
+    throw new Error('All Gemini models are currently rate-limited. Please wait a minute and try again.');
+}
+
 export async function POST(req: Request) {
     try {
         const { message, context } = await req.json();
@@ -14,129 +66,100 @@ export async function POST(req: Request) {
 
         const knowledgeBase = `
         COMPANY OVERVIEW:
-        MPBx AI Labs is a futuristic AI Delivery Studio and Product Lab. We don't just research algorithms; we forge them into production-ready systems that power businesses. 
+        MPBx AI Labs is a futuristic AI Delivery Studio and Product Lab. We forge production-ready AI systems (Operating Systems, not just one-offs). 
         We are part of the MyProBuddy ecosystem. Our core values are Execution, Innovation, Trust, and Accountability.
 
+        CAPABILITIES:
+        1. AI Architecting: We design the entire blueprint of your project.
+        2. BRD Generation: We build detailed Business Requirement Documents.
+        3. Competitive Analysis: We analyze market rivals and identify gaps your AI can fill.
+        4. Production Delivery: We build high-scale Agents, Voicebots, and Workflow Automations.
+
         SERVICES:
-        1. AI Agents: Autonomous intelligence for complex tasks (task execution, decision-making, multi-step workflows).
-        2. AI Chatbots: Intelligent conversational interfaces (support, lead capture, context retention).
-        3. AI Voicebots: Voice-enabled AI scale (100+ simultaneous calls, CRM integration, emotion detection).
-        4. Workflow Automation: End-to-end process intelligence (process mapping, API integration, data entry).
+        - AI Agents: Autonomous intelligence for multi-step workflows.
+        - AI Chatbots: Context-aware interfaces for support & lead capture.
+        - AI Voicebots: Natural speech handling 100+ simultaneous calls.
+        - Workflow Automation: End-to-end process intelligence mirroring SOPs.
 
-        OFFICIAL CASE STUDIES:
-
-        1. End-to-End Tender Intelligence & Proposal Automation (Government Contracting)
-           - Challenge: A mid-sized enterprise operating in a tender-heavy sector was spending disproportionate management time on identifying relevant tenders, manually checking eligibility, coordinating documentation, and assembling proposals under tight deadlines.
-           - Intervention: Built an AI-first tender intelligence and proposal automation platform that mirrors the client’s real operating workflow.
-           - What We Built: Automated tender discovery and relevance scoring, Eligibility logic mapping, Structured ingestion of 30+ mandatory docs, Risk flags, compliance checks, and Proposal assembly with version control.
-           - Impact: Significant reduction in bid preparation time, Improved bid discipline, Lower dependency on individual experts, Consistent, auditable tender responses.
-           - Key Quote: "AI embedded into execution, ensuring speed without compromising compliance."
-
-        2. Clinical Workflow Automation for a Diagnostics Network (Healthcare)
-           - Challenge: A fast-growing diagnostics group struggled with fragmented workflows across intake, routing, and reporting. Legacy systems existed, but none reflected how work was actually done on the ground.
-           - Intervention: Designed a workflow-first automation layer that precisely digitised the existing operational process.
-           - What We Built: End-to-end workflow automation (intake to reporting), Real-time operational dashboards, Rule engines derived from SOPs, and Longitudinal data exhaust for future intelligence.
-           - Impact: Immediate operational visibility, Reduced coordination errors, Foundation for explainable clinical intelligence, Scalable architecture.
-           - Key Quote: "Built as a long-term operating system, not a one-off software deployment."
-
-        3. AI-Driven Student Assessment & Progress Intelligence (EdTech)
-           - Challenge: An education organisation wanted a structured, objective way to assess student readiness and track progress—without relying solely on subjective evaluations.
-           - Intervention: Data-driven assessment and scoring framework that combines structured inputs and explainable scoring logic.
-           - What We Built: Multi-dimensional assessment engine, Transparent scoring logic with explainability, Progress tracking across cohorts, and Insights tailored for stakeholders.
-           - Impact: More objective decision-making, Clear identification of gaps, Improved stakeholder confidence, Platform extensible across programs.
-           - Key Quote: "Prioritized trust and explainability, not black-box scores."
-
-        4. AI-Led Equity Readiness & Investor Alignment Platform (FinTech / VC)
-           - Challenge: Early-stage companies often approach equity fundraising without being investor-ready—leading to wasted effort and misaligned conversations.
-           - Intervention: AI-assisted equity readiness and screening platform that evaluates startups across business and financial dimensions.
-           - What We Built: Structured founder and company intake, AI-generated readiness diagnostics, Clear classification (pursue/defer/rework), and Investor-aligned recommendations.
-           - Impact: Higher quality founder-investor conversations, Reduced noise and false starts, Better use of founder and investor time, Improved credibility.
-           - Key Quote: "Shifts fundraising from hope-driven outreach to data-informed preparation."
-
-        5. Grant Discovery, Eligibility & Application Intelligence (Non-Profit / Research)
-           - Challenge: Startups and MSMEs struggle to discover relevant grants, interpret eligibility clauses, and prepare compliant applications.
-           - Intervention: Grant intelligence platform that combines structured grant databases with AI-driven eligibility analysis.
-           - What We Built: Continuously updated grant corpus, Eligibility extraction and rule mapping, Fit scoring based on company profile, and Guided application workflows.
-           - Impact: Improved grant discovery and success rates, Lower dependence on manual consultants, Faster application cycles, Clear audit trail.
-           - Key Quote: "Grants became a repeatable process, not a one-time gamble."
-
-        OUR APPROACH:
-        We focus on "AI embedded into execution" and building "long-term operating systems."
+        REFERENCE CASE STUDIES:
+        1. End-to-End Tender Intelligence & Proposal Automation (Government Contracting):
+           - Challenge: Disproportionate time spent on manual discovery and eligibility coordination.
+           - Intervention: AI-first platform that automates discovery, scores relevance, maps eligibility criteria, and assembles submission-ready proposals.
+           - Impact: Significant reduction in bid preparation time and improved bid discipline.
+        
+        2. Clinical Workflow Automation (Healthcare):
+           - Challenge: Fragmented workflows across intake, routing, and reporting for a diagnostics network.
+           - Intervention: Workflow-first automation layer digitising SOPs into a long-term operating system.
+           - Impact: Immediate operational visibility and reduced coordination errors.
+        
+        3. AI-Driven Student Assessment & Progress Intelligence (EdTech):
+           - Challenge: Subjective readiness evaluations lacking diagnostic depth.
+           - Intervention: Data-driven framework combining structured inputs and explainable scoring logic for actionable educator insights.
+           - Impact: Objective decision-making and clear gap identification.
+        
+        4. AI-Led Equity Readiness & Investor Alignment (FinTech / VC):
+           - Challenge: Startups approaching fundraising without structured readiness.
+           - Intervention: Platform evaluating business, financial, and narrative dimensions to generate readiness diagnostics.
+           - Impact: Higher quality founder-investor conversations and reduced fundraising noise.
+        
+        5. Grant Discovery, Eligibility & Application Intelligence (Non-Profit):
+           - Challenge: SMEs struggling with interpretating eligibility clauses for grants.
+           - Intervention: Platform combining structured databases with AI-driven eligibility analysis and guided workflows.
+           - Impact: Improved success rates and lower dependence on consultants.
 
         CONTACT INFO:
         Email: reachus@myprobuddy.com
         Phone: +91 99522 37700
-        Roadmap within 24 hours.
         `;
 
         const prompt = `
-        You are MPBx AI, the professional and futuristic AI assistant for MPBx AI Labs.
-        Your goal is to answer user questions based ONLY on the provided knowledge base.
-        
+        SYSTEM ROLE:
+        You are the "MPBx Lead AI Architect." You are highly intelligent, strategic, and professional. 
+        Your primary role is to help users bridge the gap between their "Big Idea" and a "Production-Ready Blueprint."
+
+        MISSION PARAMETERS:
+        1. INFORMATION GATHERING: When a user shares an idea, ask intelligent follow-up questions to understand the "Ground Reality".
+        2. PROJECT BLUEPRINTING: Once you have enough context, offer to generate a mini-BRD (Business Requirement Document).
+        3. HELPING THE USER & ENDING CONVERSATION: Think logically. If the user asks "how can you help me", or if the conversation seems to be reaching a natural conclusion where they want to know more or proceed with building, tell them we can build this and you need their contact details to set up a meeting.
+           - Crucially, whenever you ask for their contact details to proceed, you MUST append the exact text "[TRIGGER_CONTACT_FORM]" at the very bottom of your response. This will trigger the UI popup automatically.
+        4. BRAND ALIGNMENT: Always maintain that MPBx AI Labs builds "Operating Systems" for execution.
+        5. QUICK REPLIES: At the absolute end of every single response, you must provide 3 context-aware quick replies for the user to click. Format this exactly starting with "[QUICK_REPLIES]" followed by the options separated by a pipe "|". 
+           - ONE of these options must always be "Contact Us".
+           - Example format: "[QUICK_REPLIES] Generate a BRD | Tell me about your case studies | Contact Us"
+
+        RESPONSE STYLE:
+        - Use "we", "our", and "ours" (MPBx AI Labs).
+        - Maintain a futuristic, executive, and confident tone.
+        - STRICT FORMATTING RULE: You MUST use proper Markdown. Always add double line breaks (\n\n) between paragraphs, list items, and sections.
+        - NEVER escape markdown. Write bold text using **bold text** syntax directly.
+        - If a user just says "hey", greet them as the Lead Architect and ask what they are looking to build today.
+
         KNOWLEDGE BASE:
         ${knowledgeBase}
 
-        STRICT GUIDELINES:
-        - NEVER use external knowledge or perform web searches (imaginary or real).
-        - If asked about "Case Studies", list or describe the 5 official case studies from the knowledge base.
-        - Use "we", "our", and "ours" when referring to MPBx AI Labs.
-        - If information is not in the knowledge base, state: "I am specialized in MPBx AI Labs' specific offerings and case studies. For more detailed information, please contact our team at reachus@myprobuddy.com."
-        - Keep answers concise, professional, and tech-forward.
-        
-        User context: ${JSON.stringify(context || {})}
-        The user just said: "${message}"
-        
-        Answer as MPBx AI:
+        User context size: ${context ? context.length : 0} previous messages.
+        Recent Context: ${JSON.stringify(context?.slice(-4) || [])}
+
+        Input: "${message}"
+
+        Architect's Response:
         `;
 
-        // Create the request body
         const requestBody = {
             contents: [{ parts: [{ text: prompt }] }],
             generationConfig: {
-                temperature: 0.1, // Keep it grounded
-                topK: 1,
-                topP: 1,
+                temperature: 0.7,
+                topK: 40,
+                topP: 0.95,
             }
         };
 
-        console.log("Sending request to Gemini API (gemini-flash-latest)...");
-
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestBody),
-            }
-        );
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Gemini API Error (Status: ${response.status}):`, errorText);
-            throw new Error(`Gemini API Error: ${response.status} - ${errorText}`);
-        }
-
-        const data = await response.json();
-
-        if (data.error) {
-            console.error("Gemini API Data Error:", data.error);
-            throw new Error(data.error.message || 'Gemini API Error');
-        }
-
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!text) {
-            console.error("Unexpected Gemini response structure:", JSON.stringify(data, null, 2));
-            throw new Error("Invalid response format from Gemini");
-        }
+        const { text } = await callGemini(apiKey, requestBody);
 
         return NextResponse.json({ reply: text });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error('SERVER SIDE CHAT ERROR:', error);
-        // Return the actual error message to the client for debugging
         return NextResponse.json(
             { error: error.message || 'Failed to process chat request' },
             { status: 500 }

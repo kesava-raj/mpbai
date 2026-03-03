@@ -37,7 +37,7 @@ const services = [
 export function ServicesPreview() {
     return (
         <Section className="py-16 md:py-24 bg-background relative">
-            <div className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-brand-secondary-orange/5 blur-[100px] rounded-full" />
+            <div className="absolute top-0 right-0 -z-10 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(244,109,25,0.05)_0%,transparent_70%)] rounded-full will-change-transform" />
 
             <div className="container mx-auto px-4 md:px-6">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">

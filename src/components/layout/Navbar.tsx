@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+
 import { Menu, X, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -47,12 +47,9 @@ export default function Navbar() {
                     )}
                 >
                     <Link href="/" className="flex items-center gap-2 group">
-                        <div className="relative h-8 w-8 md:h-9 md:w-9 transition-transform group-hover:rotate-12">
-                            <img src="/logo.svg" alt="MPBx AI Labs" className="h-full w-full object-contain" />
+                        <div className="relative h-10 md:h-12 w-auto transition-transform group-hover:scale-105">
+                            <img src="/new-logo.jpg" alt="MPBx AI Labs" className="h-full w-auto object-contain" />
                         </div>
-                        <span className="text-lg font-bold tracking-tight text-foreground hidden sm:block">
-                            MPBx <span className="text-brand-primary-orange">AI Labs</span>
-                        </span>
                     </Link>
 
                     {/* Desktop Nav */}
@@ -69,7 +66,7 @@ export default function Navbar() {
                     </div>
 
                     <div className="hidden md:flex items-center gap-3">
-                        <ThemeToggle />
+
                         <Link href="/contact">
                             <Button variant="primary" size="sm" className="rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all px-5">
                                 Get Started
@@ -79,7 +76,7 @@ export default function Navbar() {
 
                     {/* Mobile Menu Toggle */}
                     <div className="flex items-center gap-3 md:hidden">
-                        <ThemeToggle />
+
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className="text-foreground p-2 hover:bg-muted/50 rounded-full transition-colors"

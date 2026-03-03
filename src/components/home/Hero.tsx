@@ -1,29 +1,34 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Input";
 import {
     Send,
     Plus,
-    Bot,
-    User,
+    Cpu,
+    CircleUser,
     Sparkles,
     Code2,
     Briefcase,
     Mail,
-    FileText
+    FileText,
+    X,
+    Check
 } from "lucide-react";
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 type Message = {
     id: string;
     role: 'user' | 'assistant';
     content: string;
     timestamp: Date;
+    quickReplies?: string[];
 };
 
 const navigationOptions = [
@@ -33,12 +38,16 @@ const navigationOptions = [
     { label: "About Us", href: "/about", icon: FileText, desc: "Who we are" },
 ];
 
-export function Hero() {
+interface ChatHeroProps {
+    initialMessage?: string;
+}
+
+export function ChatHero({ initialMessage }: ChatHeroProps) {
     const [messages, setMessages] = useState<Message[]>([
         {
             id: 'welcome',
             role: 'assistant',
-            content: "Hello! I'm MPBx AI. I can tell you about our case studies, services, or how we build enterprise AI solutions. What would you like to know?",
+            content: "Hello! I am the Lead AI Architect at MPBx AI Labs. I'm here to translate your vision into a production-ready system. \n\nDescribe your project idea to me, and I can help you architect the solution, build a Business Requirement Document (BRD), and provide a competitive landscape analysis. What are we building today?",
             timestamp: new Date()
         }
     ]);
@@ -47,6 +56,32 @@ export function Hero() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const initialSent = useRef(false);
+
+    // Contact form state
+    const [showContactForm, setShowContactForm] = useState(false);
+    const [contactData, setContactData] = useState({ name: "", email: "", phone: "" });
+    const [contactStatus, setContactStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
+    const handleContactSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setContactStatus('submitting');
+        try {
+            await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(contactData)
+            });
+            setContactStatus('success');
+            setTimeout(() => {
+                setShowContactForm(false);
+                setContactStatus('idle');
+            }, 3000);
+        } catch (error) {
+            console.error(error);
+            setContactStatus('error');
+        }
+    };
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,13 +99,14 @@ export function Hero() {
         }
     }, [inputValue]);
 
-    const handleSendMessage = async () => {
-        if (!inputValue.trim() || isLoading) return;
+    const handleSendMessage = useCallback(async (text: string) => {
+        const trimmedText = text.trim();
+        if (!trimmedText || isLoading) return;
 
         const userMessage: Message = {
             id: Date.now().toString(),
             role: 'user',
-            content: inputValue.trim(),
+            content: trimmedText,
             timestamp: new Date()
         };
 
@@ -79,92 +115,92 @@ export function Hero() {
         setIsLoading(true);
 
         try {
+            const context = [...messages, userMessage].map(m => ({ role: m.role, content: m.content }));
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage.content })
+                body: JSON.stringify({ message: userMessage.content, context })
             });
 
             const data = await response.json();
 
             if (!response.ok) throw new Error(data.error || 'Failed to fetch');
 
+            let replyText = data.reply;
+            if (replyText.includes('[TRIGGER_CONTACT_FORM]')) {
+                replyText = replyText.replace('[TRIGGER_CONTACT_FORM]', '').trim();
+                setTimeout(() => setShowContactForm(true), 1500); // Small delay before popup
+            }
+
+            let quickReplies: string[] = [];
+            const quickRepliesMatch = replyText.match(/\[QUICK_REPLIES\]\s*(.*)/i);
+            if (quickRepliesMatch) {
+                const optionsString = quickRepliesMatch[1];
+                quickReplies = optionsString.split('|').map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+                replyText = replyText.replace(/\[QUICK_REPLIES\].*/i, '').trim();
+            }
+
             const aiMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
-                content: data.reply,
-                timestamp: new Date()
+                content: replyText,
+                timestamp: new Date(),
+                quickReplies: quickReplies.length > 0 ? quickReplies : undefined
             };
 
             setMessages(prev => [...prev, aiMessage]);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
             const errorMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
-                content: `Error: ${error.message || "Unknown error occurred"}`,
+                content: `Error: ${error instanceof Error ? error.message : "Unknown error occurred"}`,
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, errorMessage]);
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [isLoading]); // Keep isLoading here to prevent sends during loading
+
+    // Handle initial message
+    useEffect(() => {
+        if (initialMessage && !initialSent.current) {
+            initialSent.current = true;
+            handleSendMessage(initialMessage);
+        }
+    }, [initialMessage, handleSendMessage]);
+
+    const onSendClick = () => handleSendMessage(inputValue);
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleSendMessage();
+            onSendClick();
         }
     };
 
     return (
-        <Section className="relative h-screen flex flex-col p-0 overflow-hidden bg-background">
+        <Section className="relative flex-1 flex flex-col p-0 overflow-hidden bg-background h-[100dvh] w-full">
+            {/* Top Fade for scrolling text */}
+            <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent z-20 pointer-events-none" />
 
             {/* Futuristic Tech Background */}
             <div className="absolute inset-0 -z-10 bg-background overflow-hidden">
-                {/* Standard Grid */}
-                <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]" />
-
-                {/* Animated Brand Glows */}
+                <div className="absolute inset-0 bg-grid-pattern opacity-[0.05]" />
                 <motion.div
                     animate={{
                         scale: [1, 1.2, 1],
                         opacity: [0.3, 0.5, 0.3],
-                        x: [0, 50, 0],
-                        y: [0, -30, 0]
                     }}
                     transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-brand-primary-orange/20 rounded-full blur-[120px] pointer-events-none"
+                    className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-[radial-gradient(circle,rgba(252,81,9,0.2)_0%,transparent_60%)] pointer-events-none will-change-[transform,opacity]"
                 />
-
-                <motion.div
-                    animate={{
-                        scale: [1, 1.1, 1],
-                        opacity: [0.2, 0.4, 0.2],
-                        x: [0, -40, 0],
-                        y: [0, 40, 0]
-                    }}
-                    transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                    className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand-purple/15 rounded-full blur-[100px] pointer-events-none"
-                />
-
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_20%,rgba(0,0,0,0.1)_100%)] dark:bg-[radial-gradient(circle_at_50%_50%,transparent_20%,rgba(0,0,0,0.4)_100%)]" />
-            </div>
-
-            {/* Header / Logo (Floating) */}
-            <div className="pt-8 pb-4 flex flex-col items-center animate-in fade-in slide-in-from-top-4 duration-1000">
-                <div className="flex items-center gap-3">
-                    <img src="/logo.svg" alt="MPBx AI Labs" className="h-10 w-10 md:h-12 md:w-12 drop-shadow-2xl" />
-                    <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground font-jakarta">
-                        MPBx <span className="text-gradient">AI Labs</span>
-                    </h1>
-                </div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_20%,rgba(0,0,0,0.05)_100%)]" />
             </div>
 
             {/* Chat Container */}
-            <div className="flex-1 container mx-auto px-4 md:px-0 max-w-4xl relative z-10 flex flex-col min-h-0">
+            <div className="flex-1 container mx-auto px-4 md:px-0 max-w-4xl relative z-10 flex flex-col min-h-0 pt-10">
 
                 {/* Messages Area */}
                 <div className="flex-1 overflow-y-auto pr-2 md:pr-4 space-y-8 pb-40 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
@@ -179,25 +215,48 @@ export function Hero() {
                             )}
                         >
                             {msg.role === 'assistant' && (
-                                <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-brand-primary-orange to-brand-red flex items-center justify-center border border-white/20 shadow-lg mt-1">
-                                    <Bot size={18} className="text-white" />
+                                <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-brand-primary-orange to-brand-red flex items-center justify-center border border-slate-100 shadow-lg mt-1">
+                                    <Cpu size={18} className="text-white" />
                                 </div>
                             )}
 
-                            <div className={cn(
-                                "max-w-[85%] md:max-w-[80%] px-6 py-4 text-sm md:text-base leading-relaxed transition-all",
-                                msg.role === 'user'
-                                    ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-md rounded-[24px] rounded-tr-sm"
-                                    : "bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm text-foreground rounded-[24px] rounded-tl-sm"
-                            )}>
-                                <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none break-words whitespace-pre-wrap font-inter">
-                                    {msg.content}
+                            <div className="flex flex-col gap-2 max-w-[85%] md:max-w-[80%]">
+                                <div className={cn(
+                                    "px-6 py-4 text-sm md:text-base leading-relaxed transition-all",
+                                    msg.role === 'user'
+                                        ? "bg-brand-primary-orange text-white shadow-xl shadow-brand-primary-orange/20 rounded-[24px] rounded-tr-none"
+                                        : "bg-white border border-slate-100 shadow-sm text-slate-800 rounded-[24px] rounded-tl-none"
+                                )}>
+                                    <div className="max-w-none break-words font-inter text-sm md:text-base [&_p]:mb-4 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_li]:mb-2 [&_li>p]:inline [&_h1]:text-xl [&_h1]:font-bold [&_h1]:mb-3 [&_h1]:mt-6 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mb-2 [&_h2]:mt-5 [&_h3]:text-base [&_h3]:font-bold [&_h3]:mb-2 [&_h3]:mt-4 [&_strong]:font-bold [&_strong]:text-brand-primary-orange">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                            {msg.content}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
+                                {msg.quickReplies && msg.quickReplies.length > 0 && (
+                                    <div className="flex flex-wrap gap-2 mt-2">
+                                        {msg.quickReplies.map((qr, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => {
+                                                    if (qr.toLowerCase().includes('contact') || qr.toLowerCase().includes('connect')) {
+                                                        setShowContactForm(true);
+                                                    } else {
+                                                        handleSendMessage(qr);
+                                                    }
+                                                }}
+                                                className="px-4 py-2 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-600 hover:bg-brand-primary-orange/10 hover:border-brand-primary-orange/30 hover:text-brand-primary-orange transition-all active:scale-95 shadow-sm"
+                                            >
+                                                {qr}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             {msg.role === 'user' && (
-                                <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center border border-border shadow-md mt-1">
-                                    <User size={18} className="text-brand-primary-orange" />
+                                <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white flex items-center justify-center border border-slate-200 shadow-md mt-1">
+                                    <CircleUser size={18} className="text-brand-primary-orange" />
                                 </div>
                             )}
                         </motion.div>
@@ -209,7 +268,7 @@ export function Hero() {
                             className="flex gap-4 md:gap-6 justify-start"
                         >
                             <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-brand-primary-orange/20 flex items-center justify-center border border-brand-primary-orange/30">
-                                <Bot size={18} className="text-brand-primary-orange animate-pulse" />
+                                <Cpu size={18} className="text-brand-primary-orange animate-pulse" />
                             </div>
                             <div className="rounded-2xl px-5 py-4 flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 bg-brand-primary-orange/40 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
@@ -222,10 +281,28 @@ export function Hero() {
                 </div>
 
                 {/* Input Area (Centered Bottom) */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent pb-8 pt-20 px-4 md:px-0">
-                    <div className="max-w-3xl mx-auto relative group">
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/80 to-transparent pb-8 pt-32 px-4 md:px-0 z-20 pointer-events-none">
+                    <div className="max-w-3xl mx-auto relative group pointer-events-auto">
 
-                        {/* Resource Menu */}
+                        {/* Quick Suggestions */}
+                        {!isLoading && messages.length === 1 && (
+                            <div className="flex flex-wrap gap-2 mb-4 justify-center animate-in fade-in slide-in-from-bottom-2 duration-700">
+                                {[
+                                    "Build a BRD for my AI product",
+                                    "Analyze my competitors",
+                                    "How can AI automate my workflow?"
+                                ].map((suggestion) => (
+                                    <button
+                                        key={suggestion}
+                                        onClick={() => setInputValue(suggestion)}
+                                        className="px-4 py-2 rounded-full bg-slate-50 border border-slate-200 text-xs font-medium text-slate-600 hover:bg-brand-primary-orange/10 hover:border-brand-primary-orange/30 hover:text-brand-primary-orange transition-all active:scale-95 shadow-sm"
+                                    >
+                                        {suggestion}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
                         <AnimatePresence>
                             {isMenuOpen && (
                                 <motion.div
@@ -258,7 +335,7 @@ export function Hero() {
                         </AnimatePresence>
 
                         <div className={cn(
-                            "relative flex items-end gap-2 p-2 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-2xl rounded-[32px] border border-zinc-200/60 dark:border-zinc-800/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-500 focus-within:border-brand-primary-orange/40 focus-within:ring-4 focus-within:ring-brand-primary-orange/10",
+                            "relative flex items-end gap-2 p-2 bg-white rounded-[32px] border border-slate-200 shadow-[0_32px_64px_rgba(0,0,0,0.08)] transition-all duration-500 focus-within:border-brand-primary-orange/40 focus-within:ring-4 focus-within:ring-brand-primary-orange/10",
                             isMenuOpen ? "ring-4 ring-brand-primary-orange/10 border-brand-primary-orange/40" : ""
                         )}>
 
@@ -281,14 +358,14 @@ export function Hero() {
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                placeholder="Ask about our case studies..."
-                                className="min-h-[52px] max-h-[250px] py-4 resize-none border-none bg-transparent text-base md:text-lg font-medium placeholder:text-muted-foreground/30 focus-visible:ring-0 px-2 scrollbar-hide font-jakarta"
+                                placeholder="Describe your project idea..."
+                                className="min-h-[52px] max-h-[250px] py-4 resize-none border-none bg-white text-slate-700 md:text-lg font-medium placeholder:text-slate-400 focus-visible:ring-0 px-2 scrollbar-hide font-jakarta"
                                 rows={1}
                             />
 
                             <Button
                                 size="icon"
-                                onClick={handleSendMessage}
+                                onClick={onSendClick}
                                 disabled={!inputValue.trim() || isLoading}
                                 className={cn(
                                     "h-12 w-12 rounded-full shrink-0 transition-all duration-500 shadow-xl",
@@ -302,7 +379,7 @@ export function Hero() {
                         </div>
 
                         <div className="text-center mt-5">
-                            <p className="text-[10px] md:text-xs text-muted-foreground/40 flex items-center justify-center gap-2 font-inter tracking-wide">
+                            <p className="text-[10px] md:text-xs text-slate-400 flex items-center justify-center gap-2 font-inter tracking-wide">
                                 <Sparkles size={12} className="text-brand-primary-orange/30" />
                                 <span>MPBx AI Labs Delivery Studio • Powered by MyProBuddy Ecosystem</span>
                             </p>
@@ -311,8 +388,89 @@ export function Hero() {
                 </div>
 
             </div>
+
+            {/* Contact Form Modal */}
+            <AnimatePresence>
+                {showContactForm && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+                            onClick={() => setShowContactForm(false)}
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            className="relative w-full max-w-md bg-white border border-slate-200 p-6 md:p-8 rounded-3xl shadow-2xl glass"
+                        >
+                            <button
+                                onClick={() => setShowContactForm(false)}
+                                className="absolute right-6 top-6 text-slate-400 hover:text-slate-600 transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+
+                            {contactStatus === 'success' ? (
+                                <div className="text-center py-8">
+                                    <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 text-green-500">
+                                        <Check size={32} />
+                                    </div>
+                                    <h3 className="text-2xl font-bold mb-2 text-foreground">Received.</h3>
+                                    <p className="text-muted-foreground">We will connect with you shortly.</p>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleContactSubmit} className="space-y-6">
+                                    <div className="text-center mb-6">
+                                        <h3 className="text-2xl font-bold text-foreground mb-2">Let&apos;s Connect</h3>
+                                        <p className="text-sm text-muted-foreground">Share your details to proceed with the blueprint.</p>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <Textarea
+                                            placeholder="Name"
+                                            className="h-12 min-h-[48px] px-4 font-jakarta text-foreground bg-white border-slate-200 rounded-xl resize-none shrink-0 focus:border-brand-primary-orange/40"
+                                            value={contactData.name}
+                                            onChange={(e) => setContactData({ ...contactData, name: e.target.value })}
+                                            required
+                                            rows={1}
+                                        />
+                                        <Textarea
+                                            placeholder="Email Address"
+                                            className="h-12 min-h-[48px] px-4 font-jakarta text-foreground bg-white border-slate-200 rounded-xl resize-none shrink-0 focus:border-brand-primary-orange/40"
+                                            value={contactData.email}
+                                            onChange={(e) => setContactData({ ...contactData, email: e.target.value })}
+                                            required
+                                            rows={1}
+                                        />
+                                        <Textarea
+                                            placeholder="Phone Number"
+                                            className="h-12 min-h-[48px] px-4 font-jakarta text-foreground bg-white border-slate-200 rounded-xl resize-none shrink-0 focus:border-brand-primary-orange/40"
+                                            value={contactData.phone}
+                                            onChange={(e) => setContactData({ ...contactData, phone: e.target.value })}
+                                            required
+                                            rows={1}
+                                        />
+                                    </div>
+
+                                    <Button
+                                        type="submit"
+                                        disabled={contactStatus === 'submitting'}
+                                        className="w-full h-12 rounded-xl bg-gradient-to-r from-brand-primary-orange to-brand-red text-white hover:opacity-90 transition-opacity font-jakarta font-medium text-lg shadow-lg shadow-brand-primary-orange/20"
+                                    >
+                                        {contactStatus === 'submitting' ? 'Sending...' : 'Send Details'}
+                                    </Button>
+                                </form>
+                            )}
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
         </Section>
     );
 }
 
-export default Hero;
+export default ChatHero;

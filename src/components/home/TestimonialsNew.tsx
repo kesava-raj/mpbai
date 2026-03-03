@@ -2,60 +2,62 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Zap, BarChart3, Mail, Phone } from "lucide-react";
+import { ArrowLeft, ArrowRight, Zap, BarChart3, Mail, Phone, FileText, HeartPulse, GraduationCap } from "lucide-react";
 
-// Expanded data structure to match the Case Study layout
 const testimonials = [
     {
-        id: 1,
-        title: "Fintech Automation Suite",
-        client: "Sarah Johnson",
-        role: "Small Business Owner",
-        company: "FinEase Corp",
-        industry: "Finance",
-        duration: "3 Months",
-        description: "We needed to automate our loan processing workflow. MPBx AI Labs built a custom generative AI solution that reduced manual verification time by 80%. The system now handles complex document analysis with near-perfect accuracy.",
-        techStack: "Python, OpenAI, AWS",
+        id: "tender",
+        title: "Tender Intelligence & Proposal Automation",
+        client: "Confidential Client",
+        role: "GovTech Architect",
+        company: "Government Contracting",
+        industry: "GovTech",
+        duration: "Ongoing",
+        description: "A custom AI platform that mirrors real operating workflows to ingest tender documents, parse eligibility, and assemble submission-ready proposals under tight deadlines.",
+        techStack: "Gemini 1.5 Pro, Vector DB, Next.js",
         stats: [
-            { label: "Efficiency Gain", value: "119%" },
-            { label: "Processing Speed", value: "5x Faster" },
-            { label: "Error Reduction", value: "99%" }
+            { label: "Efficiency Gain", value: "85%" },
+            { label: "Bid Speed", value: "4x Faster" },
+            { label: "Compliance", value: "100%" }
         ],
-        imageGradient: "from-brand-primary-orange/20 to-brand-red/20"
+        icon: FileText,
+        imageGradient: "from-blue-600/20 to-indigo-600/20"
     },
     {
-        id: 2,
-        title: "Healthcare Patient Portal",
-        client: "David Patel",
-        role: "CTO",
-        company: "MediCare Plus",
+        id: "clinical",
+        title: "Clinical Workflow Operating System",
+        client: "Diagnostics Network",
+        role: "Head of Operations",
+        company: "Healthcare Services",
         industry: "Healthcare",
-        duration: "6 Months",
-        description: "Our patient onboarding was slow and cumbersome. The team developed an intelligent intake agent that streamlines data entry and triaging. It's completely transformed our patient experience and operational throughput.",
-        techStack: "Next.js, LangChain, Azure",
+        duration: "Project Studio",
+        description: "Built a workflow-first automation layer that digitised operational processes precisely, laying the foundation for an explainable clinical intelligence layer.",
+        techStack: "Node.js, Python AI, AWS",
         stats: [
-            { label: "Patient Satisfaction", value: "4.8/5" },
-            { label: "Admin Time Saved", value: "30 hrs/wk" },
-            { label: "Onboarding Time", value: "-60%" }
+            { label: "Process Visibility", value: "Real-time" },
+            { label: "Error Reduction", value: "70%" },
+            { label: "Scalability", value: "Infinite" }
         ],
-        imageGradient: "from-blue-500/20 to-cyan-500/20"
+        icon: HeartPulse,
+        imageGradient: "from-emerald-500/20 to-teal-500/20"
     },
     {
-        id: 3,
-        title: "Retail Demand Forecasting",
-        client: "Emily Carter",
-        role: "VP of Operations",
-        company: "UrbanTrends",
-        industry: "Retail / E-commerce",
+        id: "student",
+        title: "AI-Driven Progress Intelligence",
+        client: "EdTech Leader",
+        role: "VP of Learning",
+        company: "Education Group",
+        industry: "EdTech",
         duration: "4 Months",
-        description: "Predicting inventory needs was a guessing game. MPBx AI Labs implemented a predictive analytics engine that analyzes seasonal trends and sales data, virtually capturing lost revenue from stockouts.",
-        techStack: "TensorFlow, Google Cloud, React",
+        description: "Objectively assess student readiness and track progress using data-driven scoring frameworks that combine rule-based evaluation and explainable logic.",
+        techStack: "LangChain, React, PostgreSQL",
         stats: [
-            { label: "Revenue Increase", value: "22%" },
-            { label: "Inventory Costs", value: "-15%" },
-            { label: "Forecast Accuracy", value: "94%" }
+            { label: "Objective Scoring", value: "98%" },
+            { label: "Gap Identification", value: "Instant" },
+            { label: "User Trust", value: "High" }
         ],
-        imageGradient: "from-brand-purple/20 to-pink-500/20"
+        icon: GraduationCap,
+        imageGradient: "from-amber-500/20 to-orange-500/20"
     }
 ];
 
@@ -95,13 +97,16 @@ export function Testimonials() {
                                 className="space-y-10"
                             >
                                 {/* Featured Image / Visual */}
-                                <div className={`w-full h-64 md:h-80 rounded-3xl bg-gradient-to-br ${activeItem.imageGradient} flex items-center justify-center relative overflow-hidden border border-zinc-200 dark:border-white/10 shadow-lg`}>
-                                    <div className="absolute inset-0 bg-grid-white/[0.2] dark:bg-grid-black/[0.2]" />
-                                    <div className="text-center relative z-10 p-6">
-                                        <h3 className="text-3xl md:text-5xl font-bold text-zinc-900 dark:text-white mb-2 tracking-tight">
+                                <div className={`w-full h-64 md:h-80 rounded-3xl bg-gradient-to-br ${activeItem.imageGradient} flex items-center justify-center relative overflow-hidden border border-slate-200 shadow-lg`}>
+                                    <div className="absolute inset-0 bg-grid-black/[0.05]" />
+                                    <div className="text-center relative z-10 p-6 flex flex-col items-center">
+                                        <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center shadow-xl mb-4 text-brand-primary-orange">
+                                            <activeItem.icon size={32} />
+                                        </div>
+                                        <h3 className="text-3xl md:text-5xl font-bold text-slate-900 mb-2 tracking-tight">
                                             {activeItem.company}
                                         </h3>
-                                        <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-zinc-900 dark:text-white font-medium text-sm border border-white/30">
+                                        <span className="inline-block px-4 py-1.5 rounded-full bg-white/40 backdrop-blur-md text-slate-900 font-medium text-sm border border-white/50">
                                             {activeItem.industry}
                                         </span>
                                     </div>
@@ -112,27 +117,27 @@ export function Testimonials() {
                                     <span className="text-brand-primary-orange font-bold tracking-widest uppercase text-xs mb-2 block">
                                         Success Story
                                     </span>
-                                    <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 dark:text-white mb-6 leading-tight">
+                                    <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
                                         {activeItem.title}
                                     </h2>
-                                    <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                                    <p className="text-lg md:text-xl text-slate-600 leading-relaxed">
                                         &quot;{activeItem.description}&quot;
                                     </p>
                                 </div>
 
                                 {/* Results Grid */}
                                 <div>
-                                    <h4 className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center gap-2">
+                                    <h4 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                                         <BarChart3 className="text-brand-primary-orange" size={24} />
                                         Key Results
                                     </h4>
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                                         {activeItem.stats.map((stat, i) => (
-                                            <div key={i} className="bg-zinc-50 dark:bg-white/5 p-6 rounded-2xl border border-zinc-200 dark:border-white/5 hover:border-brand-primary-orange/50 transition-colors">
+                                            <div key={i} className="bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-brand-primary-orange/50 transition-colors">
                                                 <div className="text-2xl md:text-3xl font-bold text-brand-primary-orange mb-1">
                                                     {stat.value}
                                                 </div>
-                                                <div className="text-sm font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+                                                <div className="text-sm font-medium text-slate-500 uppercase tracking-wide">
                                                     {stat.label}
                                                 </div>
                                             </div>
@@ -141,10 +146,10 @@ export function Testimonials() {
                                 </div>
 
                                 {/* Navigation Controls */}
-                                <div className="flex items-center gap-4 pt-8 border-t border-zinc-100 dark:border-white/5">
+                                <div className="flex items-center gap-4 pt-8 border-t border-slate-100">
                                     <button
                                         onClick={prevTestimonial}
-                                        className="flex items-center gap-2 px-6 py-3 rounded-full border border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5 transition-colors font-medium text-sm"
+                                        className="flex items-center gap-2 px-6 py-3 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors font-medium text-sm"
                                     >
                                         <ArrowLeft size={18} /> Prev Story
                                     </button>
@@ -167,33 +172,33 @@ export function Testimonials() {
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="bg-zinc-900 text-white p-8 rounded-3xl shadow-xl overflow-hidden relative border border-white/10"
+                            className="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 overflow-hidden relative border border-slate-200"
                         >
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary-orange/20 rounded-full blur-[60px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary-orange/5 rounded-full blur-[60px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-                            <h3 className="text-xl font-bold mb-6 flex items-center gap-2 relative z-10">
+                            <h3 className="text-xl font-bold mb-6 flex items-center gap-2 relative z-10 text-slate-900">
                                 <Zap className="text-brand-primary-orange" size={20} />
                                 Project Info
                             </h3>
 
                             <div className="space-y-6 relative z-10">
-                                <div className="flex justify-between items-center border-b border-white/10 pb-4">
-                                    <span className="text-zinc-400 text-sm">Client</span>
+                                <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+                                    <span className="text-slate-400 text-sm">Client</span>
                                     <span className="font-medium text-right text-brand-primary-orange">{activeItem.client}</span>
                                 </div>
-                                <div className="flex justify-between items-center border-b border-white/10 pb-4">
-                                    <span className="text-zinc-400 text-sm">Role</span>
-                                    <span className="font-medium text-right">{activeItem.role}</span>
+                                <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+                                    <span className="text-slate-400 text-sm">Role</span>
+                                    <span className="font-medium text-right text-slate-900">{activeItem.role}</span>
                                 </div>
-                                <div className="flex justify-between items-center border-b border-white/10 pb-4">
-                                    <span className="text-zinc-400 text-sm">Duration</span>
-                                    <span className="font-medium text-right">{activeItem.duration}</span>
+                                <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+                                    <span className="text-slate-400 text-sm">Duration</span>
+                                    <span className="font-medium text-right text-slate-900">{activeItem.duration}</span>
                                 </div>
                                 <div>
-                                    <span className="text-zinc-400 text-sm block mb-2">Tech Stack</span>
+                                    <span className="text-slate-400 text-sm block mb-2">Tech Stack</span>
                                     <div className="flex flex-wrap items-center justify-end gap-2">
                                         {activeItem.techStack.split(', ').map((tech, i) => (
-                                            <span key={i} className="text-xs font-mono px-2 py-1 rounded bg-white/10 text-brand-primary-orange border border-white/5">
+                                            <span key={i} className="text-xs font-mono px-2 py-1 rounded bg-slate-50 text-brand-primary-orange border border-slate-200/50">
                                                 {tech}
                                             </span>
                                         ))}
@@ -208,21 +213,21 @@ export function Testimonials() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.2 }}
-                            className="bg-zinc-50 dark:bg-white/5 p-8 rounded-3xl border border-zinc-200 dark:border-white/10 shadow-sm"
+                            className="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm"
                         >
-                            <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">Need a similar solution?</h3>
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
+                            <h3 className="text-xl font-bold text-slate-900 mb-2">Need a similar solution?</h3>
+                            <p className="text-sm text-slate-500 mb-6">
                                 Book a free consultation to discuss how we can transform your business.
                             </p>
 
                             <div className="space-y-4">
-                                <a href="tel:+919952237700" className="group flex items-center gap-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-brand-primary-orange transition-colors">
+                                <a href="tel:+919952237700" className="group flex items-center gap-3 text-sm font-medium text-slate-700 hover:text-brand-primary-orange transition-colors">
                                     <div className="w-8 h-8 rounded-full bg-brand-primary-orange/10 flex items-center justify-center text-brand-primary-orange group-hover:scale-110 transition-transform">
                                         <Phone size={14} />
                                     </div>
                                     +91 99522 37700
                                 </a>
-                                <a href="mailto:reachus@myprobuddy.com" className="group flex items-center gap-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-brand-primary-orange transition-colors">
+                                <a href="mailto:reachus@myprobuddy.com" className="group flex items-center gap-3 text-sm font-medium text-slate-700 hover:text-brand-primary-orange transition-colors">
                                     <div className="w-8 h-8 rounded-full bg-brand-primary-orange/10 flex items-center justify-center text-brand-primary-orange group-hover:scale-110 transition-transform">
                                         <Mail size={14} />
                                     </div>

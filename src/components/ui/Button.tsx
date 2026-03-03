@@ -15,18 +15,18 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ({ className, variant = "primary", size = "md", isLoading, ...props }, ref) => {
         const variants = {
-            primary: "bg-brand-primary-orange text-white hover:bg-brand-dark-orange shadow-sm",
-            secondary: "bg-brand-purple text-white hover:bg-brand-purple/90 shadow-sm",
-            outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-            ghost: "hover:bg-accent hover:text-accent-foreground",
-            link: "text-primary underline-offset-4 hover:underline",
+            primary: "bg-gradient-to-br from-brand-primary-orange to-brand-red text-white hover:brightness-110 shadow-lg shadow-brand-primary-orange/20 border-none",
+            secondary: "bg-brand-purple text-white hover:bg-brand-purple/90 shadow-lg shadow-brand-purple/20 border-none",
+            outline: "border border-border bg-transparent hover:bg-accent hover:text-accent-foreground backdrop-blur-sm",
+            ghost: "hover:bg-accent/50 hover:text-accent-foreground transition-all",
+            link: "text-brand-primary-orange underline-offset-4 hover:underline",
         };
 
         const sizes = {
-            sm: "h-9 px-3 rounded-md text-xs",
-            md: "h-10 px-4 py-2 rounded-md text-sm",
-            lg: "h-11 px-8 rounded-md text-base",
-            icon: "h-10 w-10 p-0 rounded-md",
+            sm: "h-9 px-4 rounded-full text-xs font-semibold",
+            md: "h-11 px-6 py-2 rounded-full text-sm font-semibold",
+            lg: "h-13 px-10 rounded-full text-base font-bold",
+            icon: "h-11 w-11 p-0 rounded-full",
         };
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,10 +35,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         return (
             <MotionButton
                 ref={ref}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 className={cn(
-                    "inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+                    "inline-flex items-center justify-center whitespace-nowrap rounded-full font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary-orange/50 disabled:pointer-events-none disabled:opacity-50",
                     variants[variant],
                     sizes[size],
                     className
