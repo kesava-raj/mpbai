@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
+import Image from "next/image";
 import { Menu, X, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -47,8 +48,14 @@ export default function Navbar() {
                     )}
                 >
                     <Link href="/" className="flex items-center gap-2 group">
-                        <div className="relative h-10 md:h-12 w-auto transition-transform group-hover:scale-105">
-                            <img src="/new-logo.jpg" alt="MPBx AI Labs" className="h-full w-auto object-contain" />
+                        <div className="relative h-10 md:h-12 w-32 md:w-40 transition-transform group-hover:scale-105">
+                            <Image
+                                src="/new-logo.jpg"
+                                alt="MPBx AI Labs"
+                                fill
+                                className="object-contain"
+                                priority
+                            />
                         </div>
                     </Link>
 

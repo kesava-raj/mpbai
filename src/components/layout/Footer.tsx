@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Linkedin, Twitter, Github, ArrowUpRight } from "lucide-react";
 
 export default function Footer() {
@@ -13,8 +14,13 @@ export default function Footer() {
 
                     <div className="col-span-1 md:col-span-1 space-y-4">
                         <Link href="/" className="flex items-center gap-2 group">
-                            <div className="relative h-10 w-auto transition-transform group-hover:scale-105">
-                                <img src="/new-logo.jpg" alt="MPBx AI Labs" className="h-full w-auto object-contain" />
+                            <div className="relative h-10 w-32 transition-transform group-hover:scale-105">
+                                <Image
+                                    src="/new-logo.jpg"
+                                    alt="MPBx AI Labs"
+                                    fill
+                                    className="object-contain"
+                                />
                             </div>
                         </Link>
                         <p className="text-muted-foreground leading-relaxed max-w-xs">

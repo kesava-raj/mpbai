@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
@@ -64,8 +65,13 @@ export default function Sidebar() {
                         {/* Sidebar Header */}
                         <div className="p-6 flex items-center justify-between">
                             <Link href="/" className="flex items-center gap-3 group">
-                                <div className="relative h-10 w-auto shrink-0 transition-transform group-hover:scale-105">
-                                    <img src="/new-logo.jpg" alt="Logo" className="h-full w-auto object-contain" />
+                                <div className="relative h-10 w-32 shrink-0 transition-transform group-hover:scale-105">
+                                    <Image
+                                        src="/new-logo.jpg"
+                                        alt="Logo"
+                                        fill
+                                        className="object-contain"
+                                    />
                                 </div>
                             </Link>
 
