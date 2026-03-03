@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/Card";
 import { Input, Textarea } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Check, UploadCloud } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
 import Footer from "@/components/layout/Footer";
 
 const industries = ["FinTech", "HealthTech", "Logistics", "EdTech", "Legal", "E-commerce", "GovTech", "Other"];

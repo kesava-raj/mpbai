@@ -161,7 +161,7 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
         } finally {
             setIsLoading(false);
         }
-    }, [isLoading]); // Keep isLoading here to prevent sends during loading
+    }, [isLoading, messages]); // messages added to prevent stale closure warning
 
     // Handle initial message
     useEffect(() => {
