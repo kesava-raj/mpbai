@@ -35,7 +35,7 @@ export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
-    const { activeSession, startNewProject, clearAll } = useChat();
+    const { activeSession, sessions, startNewProject, switchSession, deleteSession } = useChat();
 
     return (
         <>
@@ -116,49 +116,68 @@ export default function Sidebar() {
                     </div>
 
                     {/* Active Sessions List */}
-                    <AnimatePresence>
-                        {activeSession && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="px-4 mb-8 overflow-hidden"
-                            >
-                                <div className={cn(
-                                    "text-[10px] font-bold text-slate-400 px-3 py-2 uppercase tracking-[0.2em] whitespace-nowrap transition-all",
-                                    collapsed ? "opacity-0" : "opacity-100"
-                                )}>
-                                    Active Project
-                                </div>
-                                <div className={cn(
-                                    "flex items-center gap-3 px-4 py-3 rounded-2xl bg-brand-primary-orange/5 border border-brand-primary-orange/10 group relative transition-all",
-                                    collapsed ? "justify-center px-0" : ""
-                                )}>
-                                    <MessageSquare size={18} className="shrink-0 text-brand-primary-orange" />
-                                    {!collapsed && (
-                                        <span className="text-sm font-medium text-slate-700 truncate flex-1">
-                                            {activeSession.title}
-                                        </span>
-                                    )}
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            clearAll();
+                    <div className="flex-1 overflow-y-auto px-4 mb-4 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+                        <div className={cn(
+                            "text-[10px] font-bold text-slate-400 px-3 py-2 uppercase tracking-[0.2em] whitespace-nowrap transition-all",
+                            collapsed ? "opacity-0" : "opacity-100"
+                        )}>
+                            Recent Projects
+                        </div>
+                        <div className="space-y-1">
+                            <AnimatePresence initial={false}>
+                                {sessions.map((session) => (
+                                    <motion.div
+                                        key={session.id}
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        onClick={() => {
+                                            switchSession(session.id);
+                                            setMobileOpen(false);
                                         }}
                                         className={cn(
-                                            "hover:text-brand-red transition-colors",
-                                            collapsed ? "absolute -top-1 -right-1 p-1 bg-white border border-slate-100 rounded-full shadow-sm" : "opacity-0 group-hover:opacity-100"
+                                            "flex items-center gap-3 px-4 py-2.5 rounded-2xl cursor-pointer group relative transition-all",
+                                            collapsed ? "justify-center px-0" : "",
+                                            activeSession?.id === session.id
+                                                ? "bg-brand-primary-orange/5 border border-brand-primary-orange/10"
+                                                : "hover:bg-slate-50 border border-transparent"
                                         )}
                                     >
-                                        <X size={14} />
-                                    </button>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                                        <MessageSquare
+                                            size={18}
+                                            className={cn(
+                                                "shrink-0 transition-colors",
+                                                activeSession?.id === session.id ? "text-brand-primary-orange" : "text-slate-400"
+                                            )}
+                                        />
+                                        {!collapsed && (
+                                            <span className={cn(
+                                                "text-sm font-medium truncate flex-1 transition-colors",
+                                                activeSession?.id === session.id ? "text-slate-900" : "text-slate-500"
+                                            )}>
+                                                {session.title}
+                                            </span>
+                                        )}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteSession(session.id);
+                                            }}
+                                            className={cn(
+                                                "hover:text-brand-red transition-all p-1 rounded-lg hover:bg-white border border-transparent hover:border-slate-100 hover:shadow-sm text-slate-300",
+                                                collapsed ? "absolute -top-1 -right-1" : "opacity-0 group-hover:opacity-100"
+                                            )}
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </div>
+                    </div>
 
                     {/* Navigation */}
-                    <nav className="flex-1 px-3 space-y-2 overflow-y-auto scrollbar-hide">
+                    <nav className="px-3 pb-6 space-y-2">
                         <div className={cn(
                             "text-[10px] font-bold text-slate-400 px-3 py-2 uppercase tracking-[0.2em] whitespace-nowrap overflow-hidden transition-all",
                             collapsed ? "opacity-0 h-0" : "opacity-100"
