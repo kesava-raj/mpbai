@@ -1,3 +1,4 @@
+// Final build fix - version 1.0.1
 "use client";
 
 import { useState } from "react";
