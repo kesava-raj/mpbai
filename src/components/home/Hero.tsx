@@ -198,11 +198,15 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
 
     // Handle initial message
     useEffect(() => {
-        if (initialMessage && !initialSent.current) {
+        if (initialMessage && !initialSent.current && !isLoading) {
             initialSent.current = true;
-            handleSendMessage(initialMessage);
+            // Introduce a tiny delay to ensure everything is mounted
+            const timer = setTimeout(() => {
+                handleSendMessage(initialMessage);
+            }, 100);
+            return () => clearTimeout(timer);
         }
-    }, [initialMessage, handleSendMessage]);
+    }, [initialMessage, handleSendMessage, isLoading]);
 
     const onSendClick = () => handleSendMessage(inputValue);
 
@@ -233,10 +237,10 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
             </div>
 
             {/* Chat Container */}
-            <div className="flex-1 container mx-auto px-4 md:px-0 max-w-4xl relative z-10 flex flex-col min-h-0 pt-10">
+            <div className="flex-1 container mx-auto px-4 md:px-0 max-w-4xl relative z-10 flex flex-col min-h-0 pt-4 md:pt-10">
 
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto pr-2 md:pr-4 space-y-8 pb-40 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                <div className="flex-1 overflow-y-auto pr-2 md:pr-4 space-y-4 md:space-y-8 pb-32 md:pb-40 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                     {messages.map((msg) => (
                         <motion.div
                             key={msg.id}
@@ -253,12 +257,12 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
                                 </div>
                             )}
 
-                            <div className="flex flex-col gap-2 max-w-[85%] md:max-w-[80%]">
+                            <div className="flex flex-col gap-1 md:gap-2 max-w-[90%] md:max-w-[80%]">
                                 <div className={cn(
-                                    "px-6 py-4 text-sm md:text-base leading-relaxed transition-all",
+                                    "px-4 py-3 md:px-6 md:py-4 text-sm md:text-base leading-relaxed transition-all",
                                     msg.role === 'user'
-                                        ? "bg-brand-primary-orange text-white shadow-xl shadow-brand-primary-orange/20 rounded-[24px] rounded-tr-none"
-                                        : "bg-white border border-slate-100 shadow-sm text-slate-800 rounded-[24px] rounded-tl-none"
+                                        ? "bg-brand-primary-orange text-white shadow-xl shadow-brand-primary-orange/20 rounded-[20px] md:rounded-[24px] rounded-tr-none"
+                                        : "bg-white border border-slate-100 shadow-sm text-slate-800 rounded-[20px] md:rounded-[24px] rounded-tl-none"
                                 )}>
                                     <div className="max-w-none break-words font-inter text-sm md:text-base [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3 [&_li]:mb-1 [&_li>p]:inline [&_h1]:text-lg md:[&_h1]:text-xl [&_h1]:font-bold [&_h1]:mb-2 [&_h1]:mt-4 [&_h2]:text-base md:[&_h2]:text-lg [&_h2]:font-bold [&_h2]:mb-2 [&_h2]:mt-3 [&_h3]:text-sm md:[&_h3]:text-base [&_h3]:font-bold [&_h3]:mb-1 [&_h3]:mt-2 [&_strong]:font-bold [&_strong]:text-brand-primary-orange">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
