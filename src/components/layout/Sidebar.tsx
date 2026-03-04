@@ -14,8 +14,7 @@ import {
     Menu,
     Home,
     ChevronLeft,
-    ChevronRight,
-    X
+    ChevronRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -35,7 +34,7 @@ export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
-    const { activeSession, startNewProject } = useChat();
+    const { startNewProject } = useChat();
 
     return (
         <>

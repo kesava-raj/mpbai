@@ -6,18 +6,12 @@ import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Input";
 import {
     Send,
-    Plus,
     Cpu,
     CircleUser,
     Sparkles,
-    Code2,
-    Briefcase,
-    Mail,
-    FileText,
     X,
     Check
 } from "lucide-react";
-import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from 'react-markdown';
