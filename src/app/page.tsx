@@ -9,19 +9,23 @@ import ServicesPreview from "@/components/home/ServicesPreviewNew";
 import Footer from "@/components/layout/Footer";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { useChat } from "@/context/ChatContext";
+
 export default function Home() {
+  const { activeSession } = useChat();
   const [initialChatMessage, setInitialChatMessage] = useState<string | null>(null);
 
   const startChat = (message: string) => {
     setInitialChatMessage(message);
-    // Smooth transition effect handled by framer-motion. Reset scroll instantly.
     window.scrollTo(0, 0);
   };
+
+  const showChat = activeSession || initialChatMessage;
 
   return (
     <main className="h-full flex flex-col">
       <AnimatePresence mode="wait">
-        {!initialChatMessage ? (
+        {!showChat ? (
           <motion.div
             key="landing"
             initial={{ opacity: 1 }}
@@ -41,7 +45,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex-1"
           >
-            <ChatHero initialMessage={initialChatMessage} />
+            <ChatHero initialMessage={initialChatMessage || undefined} />
           </motion.div>
         )}
       </AnimatePresence>

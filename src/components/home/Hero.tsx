@@ -23,6 +23,8 @@ import { cn } from "@/lib/utils";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+import { useChat } from "@/context/ChatContext";
+
 type Message = {
     id: string;
     role: 'user' | 'assistant';
@@ -43,7 +45,9 @@ interface ChatHeroProps {
 }
 
 export function ChatHero({ initialMessage }: ChatHeroProps) {
-    const [messages, setMessages] = useState<Message[]>([
+    const { activeSession, updateActiveSession } = useChat();
+    // Initialize messages from active session if it exists, otherwise use welcome message
+    const [messages, setMessages] = useState<Message[]>(activeSession?.messages || [
         {
             id: 'welcome',
             role: 'assistant',
@@ -57,6 +61,28 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const initialSent = useRef(false);
+
+    // Sync messages with global context
+    useEffect(() => {
+        updateActiveSession(messages);
+    }, [messages, updateActiveSession]);
+
+    // Handle switching between sessions (if activeSession changes from outside)
+    useEffect(() => {
+        if (activeSession && activeSession.messages !== messages) {
+            setMessages(activeSession.messages);
+        } else if (!activeSession && messages.length > 1) {
+            // If active session was cleared externally, reset to welcome
+            setMessages([
+                {
+                    id: 'welcome',
+                    role: 'assistant',
+                    content: "Hello! I am the Lead AI Architect at MPBx AI Labs. I'm here to translate your vision into a production-ready system. \n\nDescribe your project idea to me, and I can help you architect the solution, build a Business Requirement Document (BRD), and provide a competitive landscape analysis. What are we building today?",
+                    timestamp: new Date()
+                }
+            ]);
+        }
+    }, [activeSession]);
 
     // Contact form state
     const [showContactForm, setShowContactForm] = useState(false);

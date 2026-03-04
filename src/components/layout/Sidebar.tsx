@@ -14,11 +14,14 @@ import {
     Menu,
     Home,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { Button } from "@/components/ui/Button";
+
+import { useChat } from "@/context/ChatContext";
 
 const navLinks = [
     { name: "Home", href: "/", icon: Home },
@@ -32,6 +35,7 @@ export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
+    const { activeSession, startNewProject, clearAll } = useChat();
 
     return (
         <>
@@ -94,8 +98,11 @@ export default function Sidebar() {
                     </div>
 
                     {/* Top Action */}
-                    <div className={cn("px-4 mb-8", collapsed ? "px-2" : "px-4")}>
-                        <Link href="/">
+                    <div className={cn("px-4 mb-4", collapsed ? "px-2" : "px-4")}>
+                        <Link href="/" onClick={() => {
+                            startNewProject();
+                            setMobileOpen(false);
+                        }}>
                             <Button
                                 className={cn(
                                     "w-full h-12 bg-white border border-slate-200 text-foreground rounded-2xl flex items-center transition-all hover:bg-slate-50 hover:border-brand-primary-orange/50 shadow-sm",
@@ -108,13 +115,55 @@ export default function Sidebar() {
                         </Link>
                     </div>
 
+                    {/* Active Sessions List */}
+                    <AnimatePresence>
+                        {activeSession && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="px-4 mb-8 overflow-hidden"
+                            >
+                                <div className={cn(
+                                    "text-[10px] font-bold text-slate-400 px-3 py-2 uppercase tracking-[0.2em] whitespace-nowrap transition-all",
+                                    collapsed ? "opacity-0" : "opacity-100"
+                                )}>
+                                    Active Project
+                                </div>
+                                <div className={cn(
+                                    "flex items-center gap-3 px-4 py-3 rounded-2xl bg-brand-primary-orange/5 border border-brand-primary-orange/10 group relative transition-all",
+                                    collapsed ? "justify-center px-0" : ""
+                                )}>
+                                    <MessageSquare size={18} className="shrink-0 text-brand-primary-orange" />
+                                    {!collapsed && (
+                                        <span className="text-sm font-medium text-slate-700 truncate flex-1">
+                                            {activeSession.title}
+                                        </span>
+                                    )}
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            clearAll();
+                                        }}
+                                        className={cn(
+                                            "hover:text-brand-red transition-colors",
+                                            collapsed ? "absolute -top-1 -right-1 p-1 bg-white border border-slate-100 rounded-full shadow-sm" : "opacity-0 group-hover:opacity-100"
+                                        )}
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     {/* Navigation */}
                     <nav className="flex-1 px-3 space-y-2 overflow-y-auto scrollbar-hide">
                         <div className={cn(
                             "text-[10px] font-bold text-slate-400 px-3 py-2 uppercase tracking-[0.2em] whitespace-nowrap overflow-hidden transition-all",
                             collapsed ? "opacity-0 h-0" : "opacity-100"
                         )}>
-                            Navigation
+                            Quick Access
                         </div>
                         {navLinks.map((link) => {
                             const isActive = pathname === link.href;
@@ -147,7 +196,6 @@ export default function Sidebar() {
                             );
                         })}
                     </nav>
-
                 </motion.aside>
             </AnimatePresence>
 
