@@ -140,7 +140,7 @@ export default function Sidebar() {
 
                         {/* Bottom Actions */}
                         <div className="p-4 border-t border-slate-100">
-                            <button
+                            <Button
                                 onClick={() => {
                                     startNewProject();
                                     setMobileOpen(false);
@@ -148,18 +148,14 @@ export default function Sidebar() {
                                         window.scrollTo(0, 0);
                                     }
                                 }}
-                                className="w-full"
+                                className={cn(
+                                    "w-full h-11 bg-white border border-slate-200 text-foreground rounded-2xl flex items-center transition-all hover:bg-slate-50 hover:border-brand-primary-orange/50 shadow-sm",
+                                    collapsed ? "justify-center p-0" : "gap-3 px-4"
+                                )}
                             >
-                                <Button
-                                    className={cn(
-                                        "w-full h-11 bg-white border border-slate-200 text-foreground rounded-2xl flex items-center transition-all hover:bg-slate-50 hover:border-brand-primary-orange/50 shadow-sm",
-                                        collapsed ? "justify-center p-0" : "gap-3 px-4"
-                                    )}
-                                >
-                                    <Plus size={18} className="shrink-0 text-brand-primary-orange" />
-                                    {!collapsed && <span className="font-medium text-sm whitespace-nowrap">New Project</span>}
-                                </Button>
-                            </button>
+                                <Plus size={18} className="shrink-0 text-brand-primary-orange" />
+                                {!collapsed && <span className="font-medium text-sm whitespace-nowrap">New Project</span>}
+                            </Button>
                         </div>
                     </div>
                 </motion.aside>
