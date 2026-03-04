@@ -42,7 +42,7 @@ export function Hero({ onStartChat }: HeroProps) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
-                            className="text-5xl md:text-6xl lg:text-[5.5rem] font-medium tracking-tighter text-foreground mb-6 leading-[1.05]"
+                            className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-medium tracking-tighter text-foreground mb-6 leading-[1.05]"
                         >
                             Got an idea?<br />
                             <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-primary-orange to-brand-red">Let&apos;s build it.</span>

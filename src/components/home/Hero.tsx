@@ -231,7 +231,7 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
                                         ? "bg-brand-primary-orange text-white shadow-xl shadow-brand-primary-orange/20 rounded-[24px] rounded-tr-none"
                                         : "bg-white border border-slate-100 shadow-sm text-slate-800 rounded-[24px] rounded-tl-none"
                                 )}>
-                                    <div className="max-w-none break-words font-inter text-sm md:text-base [&_p]:mb-4 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4 [&_li]:mb-2 [&_li>p]:inline [&_h1]:text-xl [&_h1]:font-bold [&_h1]:mb-3 [&_h1]:mt-6 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mb-2 [&_h2]:mt-5 [&_h3]:text-base [&_h3]:font-bold [&_h3]:mb-2 [&_h3]:mt-4 [&_strong]:font-bold [&_strong]:text-brand-primary-orange">
+                                    <div className="max-w-none break-words font-inter text-sm md:text-base [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-3 [&_li]:mb-1 [&_li>p]:inline [&_h1]:text-lg md:[&_h1]:text-xl [&_h1]:font-bold [&_h1]:mb-2 [&_h1]:mt-4 [&_h2]:text-base md:[&_h2]:text-lg [&_h2]:font-bold [&_h2]:mb-2 [&_h2]:mt-3 [&_h3]:text-sm md:[&_h3]:text-base [&_h3]:font-bold [&_h3]:mb-1 [&_h3]:mt-2 [&_strong]:font-bold [&_strong]:text-brand-primary-orange">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                             {msg.content}
                                         </ReactMarkdown>
