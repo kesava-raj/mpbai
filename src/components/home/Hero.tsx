@@ -8,7 +8,6 @@ import {
     Send,
     Cpu,
     CircleUser,
-    Sparkles,
     X,
     Check
 } from "lucide-react";
@@ -319,23 +318,6 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
                     <div className="max-w-3xl mx-auto relative group pointer-events-auto">
 
                         {/* Quick Suggestions */}
-                        {!isLoading && messages.length === 1 && (
-                            <div className="flex flex-wrap gap-2 mb-4 justify-center animate-in fade-in slide-in-from-bottom-2 duration-700">
-                                {[
-                                    "Build a BRD for my AI product",
-                                    "Analyze my competitors",
-                                    "How can AI automate my workflow?"
-                                ].map((suggestion) => (
-                                    <button
-                                        key={suggestion}
-                                        onClick={() => setInputValue(suggestion)}
-                                        className="px-4 py-2 rounded-full bg-slate-50 border border-slate-200 text-xs font-medium text-slate-600 hover:bg-brand-primary-orange/10 hover:border-brand-primary-orange/30 hover:text-brand-primary-orange transition-all active:scale-95 shadow-sm"
-                                    >
-                                        {suggestion}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
 
                         <div className={cn(
                             "relative flex items-end gap-2 p-2 bg-white rounded-[32px] border border-slate-200 shadow-[0_32px_64px_rgba(0,0,0,0.08)] transition-all duration-500 focus-within:border-brand-primary-orange/40 focus-within:ring-4 focus-within:ring-brand-primary-orange/10 pl-6",
@@ -368,12 +350,6 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
                             </Button>
                         </div>
 
-                        <div className="text-center mt-5">
-                            <p className="text-[10px] md:text-xs text-slate-400 flex items-center justify-center gap-2 font-inter tracking-wide">
-                                <Sparkles size={12} className="text-brand-primary-orange/30" />
-                                <span>MPBx AI Labs Delivery Studio • Powered by MyProBuddy Ecosystem</span>
-                            </p>
-                        </div>
                     </div>
                 </div>
 

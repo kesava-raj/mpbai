@@ -10,7 +10,6 @@ import {
     MessageSquare,
     Library,
     Mail,
-    Plus,
     Menu,
     Home,
     ChevronLeft,
@@ -20,7 +19,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { Button } from "@/components/ui/Button";
 
-import { useChat } from "@/context/ChatContext";
 
 const navLinks = [
     { name: "Home", href: "/", icon: Home },
@@ -34,7 +32,6 @@ export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
-    const { startNewProject } = useChat();
 
     return (
         <>
@@ -137,25 +134,6 @@ export default function Sidebar() {
                             })}
                         </nav>
 
-                        {/* Bottom Actions */}
-                        <div className="p-4 border-t border-slate-100">
-                            <Button
-                                onClick={() => {
-                                    startNewProject();
-                                    setMobileOpen(false);
-                                    if (window.location.pathname === '/') {
-                                        window.scrollTo(0, 0);
-                                    }
-                                }}
-                                className={cn(
-                                    "w-full h-11 bg-white border border-slate-200 text-foreground rounded-2xl flex items-center transition-all hover:bg-slate-50 hover:border-brand-primary-orange/50 shadow-sm",
-                                    collapsed ? "justify-center p-0" : "gap-3 px-4"
-                                )}
-                            >
-                                <Plus size={18} className="shrink-0 text-brand-primary-orange" />
-                                {!collapsed && <span className="font-medium text-sm whitespace-nowrap">New Project</span>}
-                            </Button>
-                        </div>
                     </div>
                 </motion.aside>
             </AnimatePresence>
