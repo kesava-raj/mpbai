@@ -127,42 +127,26 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
         }
     }, [inputValue]);
 
-    const handleSendMessage = useCallback(async (text: string) => {
-        const trimmedText = text.trim();
-        if (!trimmedText || isLoading) return;
-
-        const userMessage: Message = {
-            id: Date.now().toString(),
-            role: 'user',
-            content: trimmedText,
-            timestamp: new Date()
-        };
-
-        let currentMessages: Message[] = [];
-        setMessages(prev => {
-            currentMessages = [...prev, userMessage];
-            return currentMessages;
-        });
-
-        setInputValue("");
+    const fetchAIResponse = useCallback(async (currentMessages: Message[]) => {
         setIsLoading(true);
-
         try {
+            const lastUserMessage = [...currentMessages].reverse().find(m => m.role === 'user');
+            if (!lastUserMessage) return;
+
             const context = currentMessages.map(m => ({ role: m.role, content: m.content }));
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage.content, context })
+                body: JSON.stringify({ message: lastUserMessage.content, context })
             });
 
             const data = await response.json();
-
             if (!response.ok) throw new Error(data.error || 'Failed to fetch');
 
             let replyText = data.reply;
             if (replyText.includes('[TRIGGER_CONTACT_FORM]')) {
                 replyText = replyText.replace('[TRIGGER_CONTACT_FORM]', '').trim();
-                setTimeout(() => setShowContactForm(true), 1500); // Small delay before popup
+                setTimeout(() => setShowContactForm(true), 1500);
             }
 
             let quickReplies: string[] = [];
@@ -194,19 +178,38 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
         } finally {
             setIsLoading(false);
         }
-    }, [isLoading, messages]); // messages added to prevent stale closure warning
+    }, [setShowContactForm, setMessages]);
 
-    // Handle initial message
+    const handleSendMessage = useCallback(async (text: string) => {
+        const trimmedText = text.trim();
+        if (!trimmedText || isLoading) return;
+
+        const userMessage: Message = {
+            id: Date.now().toString(),
+            role: 'user',
+            content: trimmedText,
+            timestamp: new Date()
+        };
+
+        setMessages(prev => {
+            const newMessages = [...prev, userMessage];
+            fetchAIResponse(newMessages);
+            return newMessages;
+        });
+        setInputValue("");
+    }, [isLoading, fetchAIResponse]);
+
+    // Handle initial message/auto-response
     useEffect(() => {
         if (initialMessage && !initialSent.current && !isLoading) {
             initialSent.current = true;
-            // Introduce a tiny delay to ensure everything is mounted
-            const timer = setTimeout(() => {
-                handleSendMessage(initialMessage);
-            }, 100);
-            return () => clearTimeout(timer);
+            handleSendMessage(initialMessage);
+        } else if (messages.length === 2 && messages[1].role === 'user' && !initialSent.current && !isLoading) {
+            // Case where session was pre-populated with user message from landing
+            initialSent.current = true;
+            fetchAIResponse(messages);
         }
-    }, [initialMessage, handleSendMessage, isLoading]);
+    }, [initialMessage, messages, isLoading, handleSendMessage, fetchAIResponse]);
 
     const onSendClick = () => handleSendMessage(inputValue);
 

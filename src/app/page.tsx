@@ -12,8 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useChat } from "@/context/ChatContext";
 
 export default function Home() {
-  const { activeSession } = useChat();
-  const [initialChatMessage, setInitialChatMessage] = useState<string | null>(null);
+  const { activeSession, startChatWithMessage } = useChat();
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
@@ -21,18 +20,12 @@ export default function Home() {
   }, []);
 
   const startChat = (message: string) => {
-    setInitialChatMessage(message);
+    startChatWithMessage(message);
     window.scrollTo(0, 0);
   };
 
-  const showChat = activeSession || initialChatMessage;
+  const showChat = !!activeSession;
 
-  // Clear initial message once it's been used to initialize a session
-  useEffect(() => {
-    if (activeSession && initialChatMessage) {
-      setInitialChatMessage(null);
-    }
-  }, [activeSession, initialChatMessage]);
   // Prevent flickering during hydration
   if (!hasMounted) return <div className="h-full bg-background" />;
 
@@ -60,7 +53,7 @@ export default function Home() {
             transition={{ duration: 0.4 }}
             className="flex-1"
           >
-            <ChatHero initialMessage={initialChatMessage || undefined} />
+            <ChatHero />
           </motion.div>
         )}
       </AnimatePresence>

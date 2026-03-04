@@ -20,7 +20,6 @@ export function Hero({ onStartChat }: HeroProps) {
 
     const handleStartChat = () => {
         if (projectDesc.trim().length > 0) {
-            startChatWithMessage(projectDesc);
             if (onStartChat) onStartChat(projectDesc);
         }
     };
