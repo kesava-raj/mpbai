@@ -108,10 +108,17 @@ export default function Sidebar() {
 
                         {/* Top Action */}
                         <div className={cn("px-4 mb-4", collapsed ? "px-2" : "px-4")}>
-                            <Link href="/" onClick={() => {
-                                startNewProject();
-                                setMobileOpen(false);
-                            }}>
+                            <button
+                                onClick={() => {
+                                    startNewProject();
+                                    setMobileOpen(false);
+                                    // If we're already on home, this helps trigger the re-render back to landing
+                                    if (window.location.pathname === '/') {
+                                        window.scrollTo(0, 0);
+                                    }
+                                }}
+                                className="w-full"
+                            >
                                 <Button
                                     className={cn(
                                         "w-full h-11 bg-white border border-slate-200 text-foreground rounded-2xl flex items-center transition-all hover:bg-slate-50 hover:border-brand-primary-orange/50 shadow-sm",
@@ -121,7 +128,7 @@ export default function Sidebar() {
                                     <Plus size={18} className="shrink-0 text-brand-primary-orange" />
                                     {!collapsed && <span className="font-medium text-sm whitespace-nowrap">New Project</span>}
                                 </Button>
-                            </Link>
+                            </button>
                         </div>
 
                         {/* Sessions List - Scrollable */}
