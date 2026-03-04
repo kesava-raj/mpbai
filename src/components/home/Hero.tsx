@@ -33,13 +33,6 @@ type Message = {
     quickReplies?: string[];
 };
 
-const navigationOptions = [
-    { label: "Our Services", href: "/services", icon: Code2, desc: "Explore our AI capabilities" },
-    { label: "Case Studies", href: "/case-studies", icon: Briefcase, desc: "See what we've built" },
-    { label: "Get a Quote", href: "/contact", icon: Mail, desc: "Start your project" },
-    { label: "About Us", href: "/about", icon: FileText, desc: "Who we are" },
-];
-
 interface ChatHeroProps {
     initialMessage?: string;
 }
@@ -57,7 +50,6 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
     ]);
     const [inputValue, setInputValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const initialSent = useRef(false);
@@ -339,53 +331,9 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
                             </div>
                         )}
 
-                        <AnimatePresence>
-                            {isMenuOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    className="absolute bottom-full left-0 mb-6 w-72 bg-background/95 backdrop-blur-2xl border border-border/50 rounded-[32px] shadow-2xl p-3 z-50 overflow-hidden ring-1 ring-black/5"
-                                >
-                                    <div className="text-[10px] font-bold text-brand-primary-orange px-4 py-2 uppercase tracking-[0.2em] opacity-80">Knowledge Base</div>
-                                    <div className="space-y-1">
-                                        {navigationOptions.map((option) => (
-                                            <Link
-                                                key={option.label}
-                                                href={option.href}
-                                                className="flex items-center gap-4 p-3 rounded-2xl hover:bg-secondary transition-all group/item"
-                                                onClick={() => setIsMenuOpen(false)}
-                                            >
-                                                <div className="p-2.5 bg-brand-primary-orange/10 text-brand-primary-orange rounded-xl group-hover/item:bg-brand-primary-orange group-hover/item:text-white transition-all shadow-sm">
-                                                    <option.icon size={18} />
-                                                </div>
-                                                <div>
-                                                    <div className="text-sm font-semibold text-foreground">{option.label}</div>
-                                                    <div className="text-[10px] text-muted-foreground font-inter tracking-tight">{option.desc}</div>
-                                                </div>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
                         <div className={cn(
-                            "relative flex items-end gap-2 p-2 bg-white rounded-[32px] border border-slate-200 shadow-[0_32px_64px_rgba(0,0,0,0.08)] transition-all duration-500 focus-within:border-brand-primary-orange/40 focus-within:ring-4 focus-within:ring-brand-primary-orange/10",
-                            isMenuOpen ? "ring-4 ring-brand-primary-orange/10 border-brand-primary-orange/40" : ""
+                            "relative flex items-end gap-2 p-2 bg-white rounded-[32px] border border-slate-200 shadow-[0_32px_64px_rgba(0,0,0,0.08)] transition-all duration-500 focus-within:border-brand-primary-orange/40 focus-within:ring-4 focus-within:ring-brand-primary-orange/10 pl-6",
                         )}>
-
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className={cn(
-                                    "h-12 w-12 rounded-full shrink-0 transition-all duration-300 hover:bg-brand-primary-orange/10",
-                                    isMenuOpen ? "bg-brand-primary-orange/10 rotate-45" : ""
-                                )}
-                            >
-                                <Plus size={24} className={cn("transition-colors", isMenuOpen ? "text-brand-primary-orange" : "text-muted-foreground")} />
-                            </Button>
 
                             <Textarea
                                 id="chat-textarea"

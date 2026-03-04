@@ -183,11 +183,6 @@ export default function Sidebar() {
                                         </motion.div>
                                     ))}
                                 </AnimatePresence>
-                                {sessions.length === 0 && !collapsed && (
-                                    <div className="px-4 py-8 text-center">
-                                        <p className="text-xs text-slate-400 italic">No temporary projects yet</p>
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>

@@ -43,6 +43,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         const hasUserMessage = messages.some(m => m.role === 'user');
         if (!hasUserMessage) return;
 
+        let newId: string | null = null;
+
         setSessions(prev => {
             const index = prev.findIndex(s => s.id === activeSessionId);
 
@@ -60,7 +62,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
                 updatedSessions[index] = { ...session, messages, title };
                 return updatedSessions;
             } else {
-                const newId = Date.now().toString();
+                newId = Date.now().toString();
                 const newSession: ChatSession = {
                     id: newId,
                     title,
@@ -70,6 +72,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
                 return [newSession, ...prev];
             }
         });
+
+        if (newId) {
+            setActiveSessionId(newId);
+        }
     }, [activeSessionId]);
 
     useEffect(() => {
