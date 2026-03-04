@@ -12,7 +12,6 @@ import {
     Mail,
     Plus,
     Menu,
-    LogOut,
     Home,
     ChevronLeft,
     ChevronRight
