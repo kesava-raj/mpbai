@@ -98,12 +98,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
                     role: 'assistant',
                     content: "Hello! I am the Lead AI Architect at MPBx AI Labs. I'm here to translate your vision into a production-ready system. \n\nDescribe your project idea to me, and I can help you architect the solution, build a Business Requirement Document (BRD), and provide a competitive landscape analysis. What are we building today?",
                     timestamp: new Date()
-                },
-                {
-                    id: Date.now().toString(),
-                    role: 'user',
-                    content: msg,
-                    timestamp: new Date()
                 }
             ],
             createdAt: new Date()

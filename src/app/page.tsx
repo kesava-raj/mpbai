@@ -27,6 +27,12 @@ export default function Home() {
 
   const showChat = activeSession || initialChatMessage;
 
+  // Clear initial message once it's been used to initialize a session
+  useEffect(() => {
+    if (activeSession && initialChatMessage) {
+      setInitialChatMessage(null);
+    }
+  }, [activeSession, initialChatMessage]);
   // Prevent flickering during hydration
   if (!hasMounted) return <div className="h-full bg-background" />;
 
