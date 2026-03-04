@@ -5,17 +5,18 @@ import path from 'path';
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { name, email, phone } = body;
+        const { name, email, phone, company, message } = body;
 
-        // 1. Simulate sending the email to kesav@myprobuddy.com
+        // 1. Log the submission
         console.log("=====================================");
         console.log("📧 NEW CONTACT FORM SUBMISSION");
         console.log("To: kesav@myprobuddy.com");
-        console.log("Subject: New Project Inquiry (from AI Chat)");
         console.log("-------------------------------------");
-        console.log(`Name:  ${name}`);
-        console.log(`Email: ${email}`);
-        console.log(`Phone: ${phone}`);
+        console.log(`Name:    ${name}`);
+        console.log(`Email:   ${email}`);
+        console.log(`Phone:   ${phone || 'N/A'}`);
+        console.log(`Company: ${company || 'N/A'}`);
+        console.log(`Message: ${message || 'N/A'}`);
         console.log("=====================================");
 
         // 2. Try Storing data in the Google Sheet remotely
@@ -26,12 +27,15 @@ export async function POST(req: Request) {
             try {
                 const sheetRes = await fetch(webhookUrl, {
                     method: 'POST',
+                    redirect: 'follow', // Important for Google Apps Script 302 redirects
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         name: name,
                         email: email,
-                        phone: phone,
-                        source: 'AI Chat UI'
+                        phone: phone || '',
+                        company: company || '',
+                        message: message || '',
+                        source: company ? 'Main Contact Form' : 'AI Chat UI'
                     })
                 });
 
@@ -39,13 +43,13 @@ export async function POST(req: Request) {
                     console.log("✅ Successfully stored in Google Sheet!");
                     sheetSuccess = true;
                 } else {
-                    console.error(`❌ Google Sheet rejected the request (Status: ${sheetRes.status}). This usually means your Google Workspace Admin blocks public access to Apps Script Webhooks.`);
+                    console.error(`❌ Google Sheet rejected the request (Status: ${sheetRes.status}).`);
                 }
             } catch (sheetError) {
                 console.error("❌ Failed to push to Google Sheet:", sheetError);
             }
         } else {
-            console.warn("⚠️ GOOGLE_SHEETS_WEBHOOK_URL is not set in .env.local.");
+            console.warn("⚠️ GOOGLE_SHEETS_WEBHOOK_URL is not set.");
         }
 
         // 3. Fallback: Store locally in an Excel-compatible CSV file if Google Sheets fails
@@ -55,10 +59,17 @@ export async function POST(req: Request) {
             const timestamp = new Date().toISOString();
 
             if (!fs.existsSync(csvFilePath)) {
-                fs.writeFileSync(csvFilePath, 'Timestamp,Name,Email,Phone,Source\n');
+                fs.writeFileSync(csvFilePath, 'Timestamp,Name,Email,Phone,Company,Message,Source\n');
             }
 
-            const csvRow = `"${timestamp}","${name.replace(/"/g, '""')}","${email.replace(/"/g, '""')}","${phone.replace(/"/g, '""')}","AI Chat"\n`;
+            const cleanName = (name || '').replace(/"/g, '""');
+            const cleanEmail = (email || '').replace(/"/g, '""');
+            const cleanPhone = (phone || '').replace(/"/g, '""');
+            const cleanCompany = (company || '').replace(/"/g, '""');
+            const cleanMsg = (message || '').replace(/"/g, '""');
+            const source = company ? 'Main Form' : 'AI Chat';
+
+            const csvRow = `"${timestamp}","${cleanName}","${cleanEmail}","${cleanPhone}","${cleanCompany}","${cleanMsg}","${source}"\n`;
             fs.appendFileSync(csvFilePath, csvRow);
             console.log("✅ Successfully saved to local leads_database.csv");
         }
