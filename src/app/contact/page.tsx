@@ -40,18 +40,22 @@ export default function ContactPage() {
         setIsSubmitting(true);
 
         try {
-            // Attempt to hit the actual API if it exists, mapping new fields to old backend structure
+            // Send structured data to the API
             await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: formState.fullName,
                     email: formState.email,
-                    phone: "N/A (Main Form)",
                     company: formState.company,
-                    message: `Industry: ${formState.industry === 'Other' ? formState.otherIndustry : formState.industry}\nProject Type: ${formState.projectType}\nTimeline: ${formState.timeline}\nPain Points: ${formState.painPoints}\nVision: ${formState.projectScope}`
+                    industry: formState.industry === 'Other' ? formState.otherIndustry : formState.industry,
+                    projectType: formState.projectType,
+                    timeline: formState.timeline,
+                    painPoints: formState.painPoints,
+                    projectScope: formState.projectScope,
+                    source: 'Main Contact Form'
                 })
-            }).catch(() => { });
+            });
         } catch (error) {
             console.error(error);
         }

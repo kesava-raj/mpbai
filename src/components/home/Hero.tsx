@@ -90,7 +90,8 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
                 body: JSON.stringify({
                     ...contactData,
                     company: "AI Lead (Chat)",
-                    message: "User requested lead follow-up through AI Chat interface."
+                    message: "User requested lead follow-up through AI Chat interface.",
+                    source: "AI Chat UI"
                 })
             });
             setContactStatus('success');
