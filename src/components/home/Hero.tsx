@@ -138,12 +138,17 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
             timestamp: new Date()
         };
 
-        setMessages(prev => [...prev, userMessage]);
+        let currentMessages: Message[] = [];
+        setMessages(prev => {
+            currentMessages = [...prev, userMessage];
+            return currentMessages;
+        });
+
         setInputValue("");
         setIsLoading(true);
 
         try {
-            const context = [...messages, userMessage].map(m => ({ role: m.role, content: m.content }));
+            const context = currentMessages.map(m => ({ role: m.role, content: m.content }));
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
