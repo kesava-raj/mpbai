@@ -47,8 +47,9 @@ export default function ContactPage() {
                 body: JSON.stringify({
                     name: formState.fullName,
                     email: formState.email,
+                    phone: "N/A (Main Form)",
                     company: formState.company,
-                    message: `Industry: ${formState.industry === 'Other' ? formState.otherIndustry : formState.industry}\nProject Type: ${formState.projectType}\nTimeline: ${formState.timeline}\nPain Points: ${formState.painPoints}\nScope: ${formState.projectScope}`
+                    message: `Industry: ${formState.industry === 'Other' ? formState.otherIndustry : formState.industry}\nProject Type: ${formState.projectType}\nTimeline: ${formState.timeline}\nPain Points: ${formState.painPoints}\nVision: ${formState.projectScope}`
                 })
             }).catch(() => { });
         } catch (error) {

@@ -70,7 +70,11 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
             await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(contactData)
+                body: JSON.stringify({
+                    ...contactData,
+                    company: "AI Lead (Chat)",
+                    message: "User requested lead follow-up through AI Chat interface."
+                })
             });
             setContactStatus('success');
             setTimeout(() => {
