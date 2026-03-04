@@ -1,7 +1,7 @@
 // Final build fix - version 1.0.1
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LandingHero from "@/components/home/HeroNew";
 import ChatHero from "@/components/home/Hero";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
@@ -14,6 +14,11 @@ import { useChat } from "@/context/ChatContext";
 export default function Home() {
   const { activeSession } = useChat();
   const [initialChatMessage, setInitialChatMessage] = useState<string | null>(null);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const startChat = (message: string) => {
     setInitialChatMessage(message);
@@ -22,15 +27,19 @@ export default function Home() {
 
   const showChat = activeSession || initialChatMessage;
 
+  // Prevent flickering during hydration
+  if (!hasMounted) return <div className="h-full bg-background" />;
+
   return (
     <main className="h-full flex flex-col">
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" initial={false}>
         {!showChat ? (
           <motion.div
             key="landing"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
           >
             <LandingHero onStartChat={startChat} />
             <WhyChooseUs />
@@ -40,9 +49,9 @@ export default function Home() {
         ) : (
           <motion.div
             key="chat"
-            initial={{ opacity: 0, scale: 0.98 }}
+            initial={{ opacity: 0, scale: 0.99 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.4 }}
             className="flex-1"
           >
             <ChatHero initialMessage={initialChatMessage || undefined} />

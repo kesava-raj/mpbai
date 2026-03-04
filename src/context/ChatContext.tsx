@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
 
 interface Message {
     id: string;
@@ -28,29 +28,36 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 export function ChatProvider({ children }: { children: ReactNode }) {
     const [activeSession, setActiveSession] = useState<ChatSession | null>(null);
 
-    const startNewProject = () => {
+    const startNewProject = useCallback(() => {
         setActiveSession(null);
-        // On navigation to '/', the Home component will show the LandingHero
-    };
+    }, []);
 
-    const updateActiveSession = (messages: Message[]) => {
+    const updateActiveSession = useCallback((messages: Message[]) => {
         if (messages.length === 0) return;
 
-        // Use the first user message or a generic title
-        const firstUserMsg = messages.find(m => m.role === 'user')?.content || "New Session";
-        const title = firstUserMsg.length > 30 ? firstUserMsg.substring(0, 30) + "..." : firstUserMsg;
+        setActiveSession(prev => {
+            // Guard: Only update if the messages are actually different
+            const isDifferent = !prev ||
+                prev.messages.length !== messages.length ||
+                prev.messages[prev.messages.length - 1].content !== messages[messages.length - 1].content;
 
-        setActiveSession(prev => ({
-            id: prev?.id || Date.now().toString(),
-            title: title,
-            messages: messages,
-            createdAt: prev?.createdAt || new Date(),
-        }));
-    };
+            if (!isDifferent) return prev;
 
-    const clearAll = () => {
+            const firstUserMsg = messages.find(m => m.role === 'user')?.content || "New Session";
+            const title = firstUserMsg.length > 30 ? firstUserMsg.substring(0, 30) + "..." : firstUserMsg;
+
+            return {
+                id: prev?.id || Date.now().toString(),
+                title: title,
+                messages: messages,
+                createdAt: prev?.createdAt || new Date(),
+            };
+        });
+    }, []);
+
+    const clearAll = useCallback(() => {
         setActiveSession(null);
-    };
+    }, []);
 
     return (
         <ChatContext.Provider value={{ activeSession, startNewProject, updateActiveSession, clearAll }}>

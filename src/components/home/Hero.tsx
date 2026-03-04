@@ -61,18 +61,24 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const initialSent = useRef(false);
+    const isUpdatingFromContext = useRef(false);
 
     // Sync messages with global context
     useEffect(() => {
-        updateActiveSession(messages);
+        if (!isUpdatingFromContext.current) {
+            updateActiveSession(messages);
+        }
+        isUpdatingFromContext.current = false;
     }, [messages, updateActiveSession]);
 
     // Handle switching between sessions (if activeSession changes from outside)
     useEffect(() => {
         if (activeSession && activeSession.messages !== messages) {
+            isUpdatingFromContext.current = true;
             setMessages(activeSession.messages);
         } else if (!activeSession && messages.length > 1) {
             // If active session was cleared externally, reset to welcome
+            isUpdatingFromContext.current = true;
             setMessages([
                 {
                     id: 'welcome',
@@ -82,7 +88,7 @@ export function ChatHero({ initialMessage }: ChatHeroProps) {
                 }
             ]);
         }
-    }, [activeSession]);
+    }, [activeSession, messages]);
 
     // Contact form state
     const [showContactForm, setShowContactForm] = useState(false);
