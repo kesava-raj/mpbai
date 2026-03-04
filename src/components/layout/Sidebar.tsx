@@ -149,21 +149,6 @@ export default function Sidebar() {
                         })}
                     </nav>
 
-                    {/* Sidebar Footer */}
-                    <div className="p-4 border-t border-slate-100">
-                        <div className={cn(
-                            "flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50 transition-colors cursor-pointer overflow-hidden",
-                            collapsed ? "justify-center" : ""
-                        )}>
-                            <div className="w-8 h-8 rounded-full bg-slate-200 shrink-0" />
-                            {!collapsed && (
-                                <div className="flex flex-col min-w-0">
-                                    <span className="text-sm font-semibold truncate">MPBx Admin</span>
-                                    <span className="text-xs text-slate-400 truncate">Settings</span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
                 </motion.aside>
             </AnimatePresence>
 
