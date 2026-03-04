@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from "react";
 
 interface Message {
     id: string;
@@ -21,6 +21,7 @@ interface ChatContextType {
     sessions: ChatSession[];
     startNewProject: () => void;
     updateActiveSession: (messages: Message[]) => void;
+    startChatWithMessage: (msg: string) => void;
     switchSession: (id: string) => void;
     deleteSession: (id: string) => void;
     clearAll: () => void;
@@ -39,19 +40,17 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const updateActiveSession = useCallback((messages: Message[]) => {
-        if (messages.length === 0) return;
+        const hasUserMessage = messages.some(m => m.role === 'user');
+        if (!hasUserMessage) return;
 
         setSessions(prev => {
             const index = prev.findIndex(s => s.id === activeSessionId);
 
-            // Generate title from first user message
             const firstUserMsg = messages.find(m => m.role === 'user')?.content || "New Session";
             const title = firstUserMsg.length > 30 ? firstUserMsg.substring(0, 30) + "..." : firstUserMsg;
 
             if (index !== -1) {
-                // Update existing session
                 const session = prev[index];
-                // Guard: only update if changed
                 if (session.messages.length === messages.length &&
                     session.messages[session.messages.length - 1].content === messages[messages.length - 1].content) {
                     return prev;
@@ -61,7 +60,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
                 updatedSessions[index] = { ...session, messages, title };
                 return updatedSessions;
             } else {
-                // Create new session
                 const newId = Date.now().toString();
                 const newSession: ChatSession = {
                     id: newId,
@@ -69,11 +67,16 @@ export function ChatProvider({ children }: { children: ReactNode }) {
                     messages,
                     createdAt: new Date()
                 };
-                setActiveSessionId(newId);
                 return [newSession, ...prev];
             }
         });
     }, [activeSessionId]);
+
+    useEffect(() => {
+        if (!activeSessionId && sessions.length > 0) {
+            setActiveSessionId(sessions[0].id);
+        }
+    }, [sessions, activeSessionId]);
 
     const switchSession = useCallback((id: string) => {
         setActiveSessionId(id);
@@ -82,6 +85,31 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     const deleteSession = useCallback((id: string) => {
         setSessions(prev => prev.filter(s => s.id !== id));
         setActiveSessionId(current => current === id ? null : current);
+    }, []);
+
+    const startChatWithMessage = useCallback((msg: string) => {
+        const newId = Date.now().toString();
+        const newSession: ChatSession = {
+            id: newId,
+            title: msg.length > 30 ? msg.substring(0, 30) + "..." : msg,
+            messages: [
+                {
+                    id: 'welcome',
+                    role: 'assistant',
+                    content: "Hello! I am the Lead AI Architect at MPBx AI Labs. I'm here to translate your vision into a production-ready system. \n\nDescribe your project idea to me, and I can help you architect the solution, build a Business Requirement Document (BRD), and provide a competitive landscape analysis. What are we building today?",
+                    timestamp: new Date()
+                },
+                {
+                    id: Date.now().toString(),
+                    role: 'user',
+                    content: msg,
+                    timestamp: new Date()
+                }
+            ],
+            createdAt: new Date()
+        };
+        setSessions(prev => [newSession, ...prev]);
+        setActiveSessionId(newId);
     }, []);
 
     const clearAll = useCallback(() => {
@@ -95,6 +123,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
             sessions,
             startNewProject,
             updateActiveSession,
+            startChatWithMessage,
             switchSession,
             deleteSession,
             clearAll

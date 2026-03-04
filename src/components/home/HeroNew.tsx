@@ -8,16 +8,20 @@ import { ArrowRight, Bot } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
 
+import { useChat } from "@/context/ChatContext";
+
 interface HeroProps {
     onStartChat?: (message: string) => void;
 }
 
 export function Hero({ onStartChat }: HeroProps) {
+    const { startChatWithMessage } = useChat();
     const [projectDesc, setProjectDesc] = useState("");
 
     const handleStartChat = () => {
-        if (projectDesc.trim().length > 0 && onStartChat) {
-            onStartChat(projectDesc);
+        if (projectDesc.trim().length > 0) {
+            startChatWithMessage(projectDesc);
+            if (onStartChat) onStartChat(projectDesc);
         }
     };
 
