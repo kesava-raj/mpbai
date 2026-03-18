@@ -32,6 +32,9 @@ export default function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
+    const isHomePage = pathname === "/";
+
+    if (isHomePage) return null;
 
     return (
         <>

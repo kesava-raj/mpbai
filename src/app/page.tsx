@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import LandingHero from "@/components/home/HeroNew";
+import VibizHero from "@/components/home/VibizHero";
 import ChatHero from "@/components/home/Hero";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import ServicesPreview from "@/components/home/ServicesPreviewNew";
@@ -40,6 +41,7 @@ export default function Home() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4 }}
           >
+            <VibizHero />
             <LandingHero onStartChat={startChat} />
             <WhyChooseUs />
             <ServicesPreview />
